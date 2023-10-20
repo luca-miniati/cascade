@@ -1,5 +1,7 @@
 import os
+
 from dotenv import load_dotenv
+
 from utils import authenticate_personal, get_listings
 
 load_dotenv()
