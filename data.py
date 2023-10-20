@@ -14,7 +14,29 @@ listings_merge_columns = [
 loans_merge_columns = [
     'origination_date',
     'amount_borrowed',
-    'borrower_rate'
+    'borrower_rate',
+]
+
+listings_columns = [
+    'employment_status_description',
+    'dti_wprosper_loan',
+    'prior_prosper_loans',
+    'prior_prosper_loans_active',
+    'investment_typeid',
+    'prosper_rating',
+    'borrower_apr',
+    'prior_prosper_loans_late_payments_one_month_plus',
+    'income_verifiable',
+    'listing_category_id',
+    'months_employed',
+    'income_range',
+    'prosper_score',
+    'prior_prosper_loans_late_cycles',
+    'listing_monthly_payment',
+    'stated_monthly_income',
+    'lender_indicator',
+    'lender_yield',
+    'occupation'
 ]
 
 listings.dropna(subset=listings_merge_columns, inplace=True)
@@ -34,7 +56,9 @@ listings_final = pd.merge(
     loans_no_duplicates,
     left_on=listings_merge_columns,
     right_on=loans_merge_columns,
-    how='left'
+    how='outer'
 )
+
+listings_final = listings_final[listings_columns + listings_merge_columns]
 
 listings_final.to_csv('data/listings_05_13_merged.csv', index=False)
