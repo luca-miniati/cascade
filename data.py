@@ -93,7 +93,13 @@ for listings_path, loans_path in zip(all_listings, all_loans):
 
         with open(f'label_encoders/le_{col}.pkl', 'wb') as f:
             pickle.dump(le, f)
+    
+    # if dti_wprosper_loan is 1000000.0, remove the row
 
+    # df.drop(axis=0) 
+    # df.[x > 10]
+    listings_final = listings_final[listings_final['dti_wprosper_loan'] <= 10]
+    
     listings_final['loan_status'] = listings_final['loan_status'].apply(
         lambda x: 1 if x in [2, 3] else 0)
     
