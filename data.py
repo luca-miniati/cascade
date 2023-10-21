@@ -1,64 +1,102 @@
-# import numpy as np
 import pandas as pd
+import pickle
+import os
+import glob
+import re
 
-# import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
 
-listings = pd.read_csv('data/Listings_20050101to20130101_20210114T163603.csv')
-loans = pd.read_csv('data/Loans_20050101to20130101_20231020T060004.csv')
+if not os.path.exists('data/raw'):
+    os.makedirs('data/raw')
+if not os.path.exists('data/clean'):
+    os.makedirs('data/clean')
 
-listings_merge_columns = [
-    'loan_origination_date',
-    'listing_amount',
-    'borrower_rate'
-]
-loans_merge_columns = [
-    'origination_date',
-    'amount_borrowed',
-    'borrower_rate',
-]
+all_listings = glob.glob('data/raw/Listings*.csv')
+all_loans = glob.glob('data/raw/Loans*.csv')
 
-listings_columns = [
-    'employment_status_description',
-    'dti_wprosper_loan',
-    'prior_prosper_loans',
-    'prior_prosper_loans_active',
-    'investment_typeid',
-    'prosper_rating',
-    'borrower_apr',
-    'prior_prosper_loans_late_payments_one_month_plus',
-    'income_verifiable',
-    'listing_category_id',
-    'months_employed',
-    'income_range',
-    'prosper_score',
-    'prior_prosper_loans_late_cycles',
-    'listing_monthly_payment',
-    'stated_monthly_income',
-    'lender_indicator',
-    'lender_yield',
-    'occupation'
-]
+for listings_path, loans_path in zip(all_listings, all_loans):
+    if not os.path.exists(listings_path):
+        print(f'File {listings_path} not found')
 
-listings.dropna(subset=listings_merge_columns, inplace=True)
-listings['loan_origination_date'] = pd.to_datetime(
-    listings['loan_origination_date'])
+    if not os.path.exists(loans_path):
+        print(f'File {loans_path} not found')
 
-loans.dropna(subset=loans_merge_columns, inplace=True)
-loans['origination_date'] = pd.to_datetime(loans['origination_date'])
+    listings = pd.read_csv(listings_path, low_memory=False)
+    loans = pd.read_csv(loans_path)
 
-listings_no_duplicates = listings[~listings.duplicated(
-    subset=listings_merge_columns, keep=False)]
-loans_no_duplicates = loans[~loans.duplicated(
-    subset=loans_merge_columns, keep=False)]
+    listings_merge_columns = [
+        'loan_origination_date',
+        'listing_amount',
+        'borrower_rate',
+        'prosper_rating'
+    ]
+    loans_merge_columns = [
+        'origination_date',
+        'amount_borrowed',
+        'borrower_rate',
+        'prosper_rating'
+    ]
 
-listings_final = pd.merge(
-    listings_no_duplicates,
-    loans_no_duplicates,
-    left_on=listings_merge_columns,
-    right_on=loans_merge_columns,
-    how='outer'
-)
+    listings.dropna(subset=listings_merge_columns, inplace=True)
+    listings['loan_origination_date'] = pd.to_datetime(
+        listings['loan_origination_date'])
 
-listings_final = listings_final[listings_columns + listings_merge_columns]
+    loans.dropna(subset=loans_merge_columns+['loan_status'], inplace=True)
+    loans['origination_date'] = pd.to_datetime(loans['origination_date'])
 
-listings_final.to_csv('data/listings_05_13_merged.csv', index=False)
+    listings_no_duplicates = listings[~listings.duplicated(
+        subset=listings_merge_columns, keep=False)]
+    loans_no_duplicates = loans[~loans.duplicated(
+        subset=loans_merge_columns, keep=False)]
+
+    listings_final = pd.merge(
+        listings_no_duplicates,
+        loans_no_duplicates,
+        left_on=listings_merge_columns,
+        right_on=loans_merge_columns,
+        how='outer'
+    )
+
+    listings_columns = [
+        'fico_score',
+        'employment_status_description',
+        'dti_wprosper_loan',
+        'prior_prosper_loans',
+        'prior_prosper_loans_active',
+        'investment_typeid',
+        'borrower_apr',
+        'income_verifiable',
+        'listing_category_id',
+        'months_employed',
+        'income_range',
+        'prosper_score',
+        'prosper_rating',
+        'listing_monthly_payment',
+        'stated_monthly_income',
+        'lender_indicator',
+        'lender_yield',
+        'occupation',
+        'listing_amount',
+        'borrower_rate',
+        'loan_status',
+    ]
+
+    listings_final = listings_final[listings_columns].dropna()
+    listings_final_no_encode = listings_final.copy()
+
+    if not os.path.exists('label_encoders'):
+        os.makedirs('label_encoders')
+
+    for col in ['fico_score', 'employment_status_description', 'income_verifiable', 'occupation', 'prosper_rating']:
+        le = LabelEncoder()
+        listings_final[col] = le.fit_transform(listings_final[col])
+
+        with open(f'label_encoders/le_{col}.pkl', 'wb') as f:
+            pickle.dump(le, f)
+
+    listings_final['loan_status'] = listings_final['loan_status'].apply(
+        lambda x: 1 if x in [2, 3] else 0)
+    
+    start, end = re.search(r'_(\d{4})(?:\d{4})(?:to)(\d{4})', listings_path).groups()
+    listings_final.to_csv(f'data/clean/{start}_{end}.csv', index=False)
+    listings_final_no_encode.to_csv(f'data/clean/{start}_{end}_no_encode.csv', index=False)

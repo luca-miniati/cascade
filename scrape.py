@@ -17,7 +17,7 @@ access_token, refresh_token, expires_at = authenticate_personal(
 listings = get_listings(
     access_token,
     {
-        'limit': 1,
+        'limit': 100,
         'biddable': False
     }
 )
