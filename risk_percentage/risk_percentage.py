@@ -12,8 +12,8 @@ hidden_size1 = 128  # Number of neurons in the hidden layer
 hidden_size2 = 64
 hidden_size3 = 16
 ouput_size = 1
-num_epochs = 500 # Number of training epochs
-batch_size = 64  # Batch size for training
+num_epochs = 500
+batch_size = 64 
 learning_rate = 0.003  # Learning rate for the optimizer
 
 # need data files
