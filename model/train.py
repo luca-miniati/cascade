@@ -8,7 +8,7 @@ from data import ListingsDataset
 from model import RiskModel
 
 
-hidden_size1 = 128  # Number of neurons in the hidden layer
+hidden_size1 = 128 
 hidden_size2 = 64
 hidden_size3 = 16
 ouput_size = 1
@@ -21,7 +21,6 @@ val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'cle
 
 train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
 validation_dataset = ListingsDataset(dataset_path=val_path, dataset_type="train")
-print("Datasets loaded.")
 
 input_size = train_dataset.input_dimension # 22
 
