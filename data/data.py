@@ -4,6 +4,7 @@ import os
 import glob
 import re
 import warnings
+from tqdm import tqdm
 
 warnings.filterwarnings("ignore")
 
@@ -17,7 +18,7 @@ all_listings.sort()
 all_loans = glob.glob('data/raw/Loans*.csv')
 all_loans.sort()
 
-for listings_path, loans_path in zip(all_listings, all_loans):
+for listings_path, loans_path in tqdm(zip(all_listings, all_loans)):
     if not os.path.exists(listings_path):
         print(f'File {listings_path} not found')
 
