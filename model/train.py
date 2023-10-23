@@ -2,24 +2,26 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import copy
+import os
 
-from model.data import ListingsDataset
-from model.model import RiskModel
+from data import ListingsDataset
+from model import RiskModel
 
 
 hidden_size1 = 128  # Number of neurons in the hidden layer
 hidden_size2 = 64
 hidden_size3 = 16
 ouput_size = 1
-num_epochs = 100
+num_epochs = 200
 batch_size = 64 
 learning_rate = 0.003  # Learning rate for the optimizer
 
-# need data files
+train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_training.csv')
+val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_val.csv')
 
-train_dataset = ListingsDataset(dataset_path="cleaned_train.csv", dataset_type="train")
-test_dataset = ListingsDataset(dataset_path="cleaned_test.csv", dataset_type="test")
-validation_dataset = ListingsDataset(dataset_path="validation.csv", dataset_type="train")
+train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
+validation_dataset = ListingsDataset(dataset_path=val_path, dataset_type="train")
+print("Datasets loaded.")
 
 input_size = train_dataset.input_dimension # 22
 
@@ -57,11 +59,17 @@ for epoch in range(num_epochs):
     
     model.eval()
     total_loss = 0
+    correct_preds = 0
+    total_preds = 0
     for i, (data, labels) in enumerate(validation_loader):
 
         outputs = model(data)
         loss = criterion(outputs, labels)
         total_loss += loss
+        rounded_outputs = torch.round(outputs)
+
+        correct_preds += (rounded_outputs == labels).sum().item()
+        total_preds += labels.size(0)
 
     if min_loss == 0:
         min_loss = total_loss
@@ -70,8 +78,9 @@ for epoch in range(num_epochs):
         min_loss = total_loss
         min_epoch = epoch
 
-    if (epoch+1) % 10 == 0:
-        print(f'epoch {epoch+1}, min loss = {min_loss} at epoch: {min_epoch}')
+    accuracy = correct_preds / total_preds
+    print(f'Accuracy: {accuracy * 100:.2f}% at epoch: {epoch}')
+    print(f'epoch {epoch+1}, min loss = {min_loss} at epoch: {min_epoch}')
         
 
 print(f'min loss:  {min_loss} at epoch: {min_epoch}')
