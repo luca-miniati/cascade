@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import copy
+import os
 
 from data import ListingsDataset
 from model import RiskModel
@@ -15,10 +16,12 @@ num_epochs = 200
 batch_size = 64 
 learning_rate = 0.003  # Learning rate for the optimizer
 
-# need data files
+train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_training.csv')
+val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_val.csv')
 
-train_dataset = ListingsDataset(dataset_path="mega_training.csv", dataset_type="train")
-validation_dataset = ListingsDataset(dataset_path="mega_val.csv", dataset_type="train")
+train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
+validation_dataset = ListingsDataset(dataset_path=val_path, dataset_type="train")
+print("Datasets loaded.")
 
 input_size = train_dataset.input_dimension # 22
 
