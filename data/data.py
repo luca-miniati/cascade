@@ -3,6 +3,9 @@ import pickle
 import os
 import glob
 import re
+import warnings
+
+warnings.filterwarnings("ignore")
 
 if not os.path.exists('data/raw'):
     os.makedirs('data/raw')
@@ -42,9 +45,9 @@ for listings_path, loans_path in zip(all_listings, all_loans):
     loans.dropna(subset=merge_columns+['loan_status'], inplace=True)
     loans['origination_date'] = pd.to_datetime(loans['origination_date'])
 
-    listings_no_duplicates = listings.loc[:, ~listings.duplicated(
+    listings_no_duplicates = listings.loc[~listings.duplicated(
         subset=merge_columns, keep=False)]
-    loans_no_duplicates = loans.loc[:, ~loans.duplicated(
+    loans_no_duplicates = loans.loc[~loans.duplicated(
         subset=merge_columns, keep=False)]
 
     if listings_no_duplicates['fico_score'].isna().sum() > listings_no_duplicates['TUFicoRange'].isna().sum():
