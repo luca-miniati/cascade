@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 
-class ListingsDataSet:
+class ListingsDataset:
     def __init__(self, dataset_path, dataset_type):
         self.data = pd.read_csv(dataset_path)
         self.type = dataset_type

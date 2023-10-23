@@ -3,9 +3,8 @@ import torch.nn as nn
 import pandas as pd
 import copy
 
-from listings_data import ListingsDataSet
-from neuralnet import NeuralNetRiskPercentage
-
+from model.data import ListingsDataset
+from model.model import RiskModel
 
 
 hidden_size1 = 128  # Number of neurons in the hidden layer
@@ -17,9 +16,9 @@ batch_size = 64
 learning_rate = 0.003  # Learning rate for the optimizer
 
 # need data files
-train_dataset = ListingsDataSet(dataset_path="cleaned_train.csv", dataset_type="train")
-test_dataset = ListingsDataSet(dataset_path="cleaned_test.csv", dataset_type="test")
-validation_dataset = ListingsDataSet(dataset_path="validation.csv", dataset_type="train")
+train_dataset = ListingsDataset(dataset_path="cleaned_train.csv", dataset_type="train")
+test_dataset = ListingsDataset(dataset_path="cleaned_test.csv", dataset_type="test")
+validation_dataset = ListingsDataset(dataset_path="validation.csv", dataset_type="train")
 
 input_size = train_dataset.input_dimension # 22
 
@@ -27,7 +26,7 @@ train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=bat
 test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=batch_size, shuffle=False)
 
-model = NeuralNetRiskPercentage(input_size=input_size, hidden1=hidden_size1, hidden2=hidden_size2, hidden3=hidden_size3, output=ouput_size)
+model = RiskModel(input_size=input_size, hidden1=hidden_size1, hidden2=hidden_size2, hidden3=hidden_size3, output=ouput_size)
 
 criterion = nn.L1Loss()
 

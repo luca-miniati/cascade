@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-class NeuralNetRiskPercentage(nn.Module):
+class RiskModel(nn.Module):
     def __init__(self, input_size, hidden1, hidden2, hidden3, output):
-        super(NeuralNetRiskPercentage, self).__init__()
+        super(RiskModel, self).__init__()
         self.l1 = nn.Linear(input_size, hidden1) 
         self.l2 = nn.Linear(hidden1, hidden2)
         self.l3 = nn.Linear(hidden2, hidden3)
