@@ -1,4 +1,5 @@
-data/
+/data/clean/
+/data/raw/
 __pycache__/
 .DS_Store
 .env

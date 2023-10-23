@@ -16,15 +16,10 @@ batch_size = 64
 learning_rate = 0.003  # Learning rate for the optimizer
 
 # need data files
-<<<<<<<< HEAD:risk_percentage.py
-train_dataset = ListingsDataSet(dataset_path="data/clean/2013_2014.csv", dataset_type="train")
-# test_dataset = ListingsDataSet(dataset_path="cleaned_test.csv", dataset_type="test")
-validation_dataset = ListingsDataSet(dataset_path="data/clean/2013_2014_val.csv", dataset_type="train")
-========
+
 train_dataset = ListingsDataset(dataset_path="cleaned_train.csv", dataset_type="train")
 test_dataset = ListingsDataset(dataset_path="cleaned_test.csv", dataset_type="test")
 validation_dataset = ListingsDataset(dataset_path="validation.csv", dataset_type="train")
->>>>>>>> 4e9065b5676586228d0a0d14451166cca672b38e:model/train.py
 
 input_size = train_dataset.input_dimension # 22
 
@@ -97,4 +92,24 @@ predictions = predictions.ravel()
 results_df = pd.DataFrame({'ID' : range(1461, 1461 + len(predictions)), 'SalePrice' : predictions})
 
 results_df.to_csv('predictions.csv', index=False)
+'''
+
+# accuracy testing
+
+'''
+model.eval()
+correct_preds = 0
+total_preds = 0
+
+with torch.no_grad():
+    for data, labels in validation_loader:
+        outputs = model(data)
+        # Round the predictions to the nearest integer (or use your own rounding logic)
+        rounded_outputs = torch.round(outputs)
+
+        correct_preds += (rounded_outputs == labels).sum().item()
+        total_preds += labels.size(0)
+
+accuracy = correct_preds / total_preds
+print(f'Accuracy: {accuracy * 100:.2f}%')
 '''
