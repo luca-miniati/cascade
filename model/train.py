@@ -12,12 +12,12 @@ hidden_size1 = 128
 hidden_size2 = 64
 hidden_size3 = 16
 ouput_size = 1
-num_epochs = 200
-batch_size = 64 
+num_epochs = 100
+batch_size = 128 
 learning_rate = 0.003  # Learning rate for the optimizer
 
-train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_training.csv')
-val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'mega_val.csv')
+train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'short_training.csv')
+val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'short_val.csv')
 
 train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
 validation_dataset = ListingsDataset(dataset_path=val_path, dataset_type="train")
@@ -27,6 +27,7 @@ input_size = train_dataset.input_dimension # 22
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 # test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=batch_size, shuffle=False)
+print("All data loaded.")
 
 model = RiskModel(input_size=input_size, hidden1=hidden_size1, hidden2=hidden_size2, hidden3=hidden_size3, output=ouput_size)
 
@@ -79,7 +80,8 @@ for epoch in range(num_epochs):
 
     accuracy = correct_preds / total_preds
     print(f'Accuracy: {accuracy * 100:.2f}% at epoch: {epoch}')
-    print(f'epoch {epoch+1}, min loss = {min_loss} at epoch: {min_epoch}')
+    print(f'epoch {epoch}, loss = {total_loss:4f}, min loss = {min_loss:4f} at epoch: {min_epoch}')
+    #write output and expected output to a csv file
         
 
 print(f'min loss:  {min_loss} at epoch: {min_epoch}')
@@ -87,20 +89,30 @@ print(f'min loss:  {min_loss} at epoch: {min_epoch}')
 
 # torch.save(model.state_dict(), 'epochs\epoch#1100.pth') 
 # model.load_state_dict(torch.load('epochs\epoch#254.pth'))
-'''
+
 predictions = []
+rounded_preds = []
+expected_vals = []
 with torch.no_grad():
-    for data in test_loader:
+    for i, (data, labels) in enumerate(validation_loader):
         outputs = model(data)
         predictions.append(outputs)
+        rounded_preds.append(torch.round(outputs))
+        expected_vals.append(labels)
+
 predictions = torch.cat(predictions, dim=0)
+rounded_preds = torch.cat(rounded_preds, dim=0)
+expected_vals = torch.cat(expected_vals, dim=0)
 
 predictions = predictions.ravel()
+rounded_preds = rounded_preds.ravel()
+expected_vals = expected_vals.ravel()
 
-results_df = pd.DataFrame({'ID' : range(1461, 1461 + len(predictions)), 'SalePrice' : predictions})
+results_df = pd.DataFrame({'Prediction' : predictions, 'Rounded prediction' : rounded_preds, 'Expected value' : expected_vals})
 
-results_df.to_csv('predictions.csv', index=False)
-'''
+results_df.to_csv('risk_percentages.csv', index=False)
+
+
 
 # accuracy testing
 
