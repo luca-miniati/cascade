@@ -12,11 +12,11 @@ hidden_size1 = 128
 hidden_size2 = 64
 hidden_size3 = 16
 ouput_size = 1
-num_epochs = 100
+num_epochs = 5
 batch_size = 128 
 learning_rate = 0.003  # Learning rate for the optimizer
 
-train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'short_training.csv')
+train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'balanced_mega_training.csv')
 val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'short_val.csv')
 
 train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
@@ -31,7 +31,7 @@ print("All data loaded.")
 
 model = RiskModel(input_size=input_size, hidden1=hidden_size1, hidden2=hidden_size2, hidden3=hidden_size3, output=ouput_size)
 
-criterion = nn.L1Loss()
+criterion = nn.BCELoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -110,11 +110,8 @@ expected_vals = expected_vals.ravel()
 
 results_df = pd.DataFrame({'Prediction' : predictions, 'Rounded prediction' : rounded_preds, 'Expected value' : expected_vals})
 
-results_df.to_csv('risk_percentages.csv', index=False)
+results_df.to_csv('risk_percentages1.csv', index=False)
 
-
-
-# accuracy testing
 
 '''
 model.eval()
