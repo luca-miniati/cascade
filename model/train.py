@@ -11,8 +11,8 @@ from model import RiskModel
 hidden_size1 = 128 
 hidden_size2 = 64
 hidden_size3 = 16
-ouput_size = 1
-num_epochs = 5
+ouput_size = 2
+num_epochs = 50
 batch_size = 128 
 learning_rate = 0.003  # Learning rate for the optimizer
 
@@ -46,14 +46,16 @@ for epoch in range(num_epochs):
     for i, (data, labels) in enumerate(train_loader):
 
         outputs = model(data)
-        loss = criterion(outputs, labels)
+        _labels = torch.cat([1. - labels, labels], dim=1)
+        loss = criterion(outputs, _labels)
+
 
         optimizer.zero_grad() 
         loss.backward()
         optimizer.step()
-
-        # if (i + 1) % 10 == 0:
-        #     print(f'epoch {epoch + 1} / {num_epochs}, step {i + 1}/{n_total_steps}, loss = {loss.item():.4f}')
+        
+        if (i + 1) % 100 == 0:
+            print(f'epoch {epoch + 1} / {num_epochs}, step {i + 1}/{n_total_steps}, loss = {loss.item():.4f}')
     
     # torch.save(model.state_dict, f'epochs\epoch{epoch}.pth')
     
@@ -64,12 +66,13 @@ for epoch in range(num_epochs):
     for i, (data, labels) in enumerate(validation_loader):
 
         outputs = model(data)
-        loss = criterion(outputs, labels)
+        _labels = torch.cat([1. - labels, labels], dim=1)
+        loss = criterion(outputs, _labels)
         total_loss += loss
         rounded_outputs = torch.round(outputs)
 
-        correct_preds += (rounded_outputs == labels).sum().item()
-        total_preds += labels.size(0)
+        correct_preds += (rounded_outputs == _labels).sum().item()
+        total_preds += _labels.size(0)
 
     if min_loss == 0:
         min_loss = total_loss
