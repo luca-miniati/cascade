@@ -16,8 +16,8 @@ num_epochs = 50
 batch_size = 128 
 learning_rate = 0.003  # Learning rate for the optimizer
 
-train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'balanced_mega_training.csv')
-val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'clean', 'short_val.csv')
+train_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'data', 'clean', 'balanced_mega_training.csv')
+val_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'data', 'clean', 'short_val.csv')
 
 train_dataset = ListingsDataset(dataset_path=train_path, dataset_type="train")
 validation_dataset = ListingsDataset(dataset_path=val_path, dataset_type="train")
