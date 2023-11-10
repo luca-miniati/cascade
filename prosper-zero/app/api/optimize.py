@@ -13,6 +13,20 @@ def get_risk_buckets():
         "E" :  0.286738,
         "HR" : 0.341582,
     }
+
+def get_expected_portfolio_return(portfolio):
+    num_loans = len(portfolio)
+    weights = [1 / num_loans] * num_loans
+
+    portfolio_return = sum(weight * loan['expected_return'] for weight, loan in zip(weights, portfolio))
+    return portfolio_return
+
+def get_portfolio_diversity(portfolio):
+    risk_free_rate = 0.04
+    expected_return = get_expected_portfolio_return(portfolio=portfolio)
+    
+    return 0
+
 def optimize_portfolio(max_loans, listings, portfolio=None, optimization_solver=None, objective_function=None):
     risk_buckets = get_risk_buckets()
 
