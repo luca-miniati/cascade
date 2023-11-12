@@ -1,11 +1,16 @@
-const Home = () => {
-  const handleClick = () => {
+"use client";
 
+import { useRouter } from "next/navigation";
+
+const Home = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/api/auth/signin/prosper");
   }
   return (
     <main>
       <h1>ProsperZero</h1>
-      <button onClick={handleClick}>Log in with Prosper</button>
+      <button onClick={handleClick}>Sign in with Prosper</button>
     </main>
   );
 };
