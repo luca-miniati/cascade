@@ -60,6 +60,19 @@ def get_sharpe_ratio(portfolio, risk_free_rate):
     return sharpe_ratio
 
 def optimize_portfolio(max_loans, listings, risk_free_rate, optimization_solver='PULP_CBC_CMD', portfolio=None):
+    """
+    Optimize a portfolio of loans using linear programming.
+
+    Parameters:
+    - max_loans (int): Maximum number of loans to select.
+    - listings (list): List of loan dictionaries.
+    - risk_free_rate (float): Risk-free rate of return.
+    - optimization_solver (str): Solver for linear programming.
+    - portfolio (list, optional): List of dictionaries representing an existing portfolio.
+
+    Returns:
+    - selected_loans (list): List of selected loan IDs.
+    """
     risk_buckets = get_risk_buckets()
 
     model = LpProblem(name="Portfolio_Optimization", sense=LpMaximize)
@@ -90,6 +103,7 @@ def optimize_portfolio_route(portfolio, max_loans, listings, optimization_solver
 
 # if __name__ == '__main__':
 #     app.run()
+'''
 listings = [
     {'id' : "loan1", 'prosper_rating' : "AA", 'expected_return' : 0.05},
     {'id' : "loan2", 'prosper_rating' : "A", 'expected_return' : 0.06},
@@ -105,11 +119,48 @@ portfolio = [
     {'id' : "loan9", 'prosper_rating' : "C", 'expected_return' : 0.06},
     {'id' : "loan10", 'prosper_rating' : "B", 'expected_return' : 0.055},
 ]
+'''
+listings = [
+    {'id': 'loan1', 'prosper_rating': 'AA', 'expected_return': 0.05},
+    {'id': 'loan2', 'prosper_rating': 'A', 'expected_return': 0.06},
+    {'id': 'loan3', 'prosper_rating': 'B', 'expected_return': 0.07},
+    {'id': 'loan4', 'prosper_rating': 'C', 'expected_return': 0.08},
+    {'id': 'loan5', 'prosper_rating': 'B', 'expected_return': 0.065},
+    {'id': 'loan6', 'prosper_rating': 'AA', 'expected_return': 0.055},
+    {'id': 'loan7', 'prosper_rating': 'A', 'expected_return': 0.062},
+    {'id': 'loan8', 'prosper_rating': 'B', 'expected_return': 0.071},
+    {'id': 'loan9', 'prosper_rating': 'C', 'expected_return': 0.078},
+    {'id': 'loan10', 'prosper_rating': 'B', 'expected_return': 0.068},
+    {'id': 'loan11', 'prosper_rating': 'AA', 'expected_return': 0.049},
+    {'id': 'loan12', 'prosper_rating': 'A', 'expected_return': 0.058},
+    {'id': 'loan13', 'prosper_rating': 'B', 'expected_return': 0.072},
+    {'id': 'loan14', 'prosper_rating': 'C', 'expected_return': 0.081},
+    {'id': 'loan15', 'prosper_rating': 'B', 'expected_return': 0.063},
+]
+
+portfolio = [
+    {'id': 'loan16', 'prosper_rating': 'AA', 'expected_return': 0.025},
+    {'id': 'loan17', 'prosper_rating': 'A', 'expected_return': 0.07},
+    {'id': 'loan18', 'prosper_rating': 'B', 'expected_return': 0.078},
+    {'id': 'loan19', 'prosper_rating': 'C', 'expected_return': 0.062},
+    {'id': 'loan20', 'prosper_rating': 'B', 'expected_return': 0.057},
+    {'id': 'loan21', 'prosper_rating': 'AA', 'expected_return': 0.022},
+    {'id': 'loan22', 'prosper_rating': 'A', 'expected_return': 0.067},
+    {'id': 'loan23', 'prosper_rating': 'B', 'expected_return': 0.072},
+    {'id': 'loan24', 'prosper_rating': 'C', 'expected_return': 0.058},
+    {'id': 'loan25', 'prosper_rating': 'B', 'expected_return': 0.055},
+    {'id': 'loan26', 'prosper_rating': 'AA', 'expected_return': 0.02},
+    {'id': 'loan27', 'prosper_rating': 'A', 'expected_return': 0.075},
+    {'id': 'loan28', 'prosper_rating': 'B', 'expected_return': 0.079},
+    {'id': 'loan29', 'prosper_rating': 'C', 'expected_return': 0.065},
+    {'id': 'loan30', 'prosper_rating': 'B', 'expected_return': 0.058},
+]
+
 solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
 
 for solver in solvers:
     print(f"Using solver: {solver}")
-    selected_loans = optimize_portfolio(3, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
+    selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02)
     print(f"Selected loans: {selected_loans}\n")
 
 # selected_loans = optimize_portfolio(3, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
