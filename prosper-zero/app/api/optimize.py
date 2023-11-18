@@ -59,7 +59,7 @@ def get_sharpe_ratio(portfolio, risk_free_rate):
     
     return sharpe_ratio
 
-def optimize_portfolio(max_loans, listings, risk_free_rate, optimization_solver='PULP_CBC_CMD', portfolio=None):
+def optimize_portfolio(max_loans, listings, risk_free_rate, risk_weight=1, optimization_solver='PULP_CBC_CMD', portfolio=None):
     """
     Optimize a portfolio of loans using linear programming.
 
@@ -67,6 +67,7 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, optimization_solver=
     - max_loans (int): Maximum number of loans to select.
     - listings (list): List of loan dictionaries.
     - risk_free_rate (float): Risk-free rate of return.
+    - risk_weight (float): Tunes how much you want to prioritize risk in your portfolio
     - optimization_solver (str): Solver for linear programming.
     - portfolio (list, optional): List of dictionaries representing an existing portfolio.
 
@@ -77,7 +78,8 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, optimization_solver=
 
     model = LpProblem(name="Portfolio_Optimization", sense=LpMaximize)
 
-    risk_adjusted_returns = [(1 - risk_buckets[entry["prosper_rating"]]) * entry["expected_return"] for entry in listings]
+
+    risk_adjusted_returns = [(loan["expected_return"] - (risk_weight * loan["expected_return"] * risk_buckets[loan["prosper_rating"]])) for loan in listings]
     
     loans = range(len(listings))
     x = LpVariable.dicts("loan", loans, cat="Binary")
@@ -136,31 +138,68 @@ listings = [
     {'id': 'loan13', 'prosper_rating': 'B', 'expected_return': 0.072},
     {'id': 'loan14', 'prosper_rating': 'C', 'expected_return': 0.081},
     {'id': 'loan15', 'prosper_rating': 'B', 'expected_return': 0.063},
+    {'id': 'loan16', 'prosper_rating': 'AA', 'expected_return': 0.055},
+    {'id': 'loan17', 'prosper_rating': 'A', 'expected_return': 0.065},
+    {'id': 'loan18', 'prosper_rating': 'B', 'expected_return': 0.07},
+    {'id': 'loan19', 'prosper_rating': 'C', 'expected_return': 0.075},
+    {'id': 'loan20', 'prosper_rating': 'B', 'expected_return': 0.068},
+    {'id': 'loan21', 'prosper_rating': 'AA', 'expected_return': 0.05},
+    {'id': 'loan22', 'prosper_rating': 'A', 'expected_return': 0.059},
+    {'id': 'loan23', 'prosper_rating': 'B', 'expected_return': 0.073},
+    {'id': 'loan24', 'prosper_rating': 'C', 'expected_return': 0.082},
+    {'id': 'loan25', 'prosper_rating': 'B', 'expected_return': 0.064},
+    {'id': 'loan26', 'prosper_rating': 'AA', 'expected_return': 0.052},
+    {'id': 'loan27', 'prosper_rating': 'A', 'expected_return': 0.061},
+    {'id': 'loan28', 'prosper_rating': 'B', 'expected_return': 0.074},
+    {'id': 'loan29', 'prosper_rating': 'C', 'expected_return': 0.083},
+    {'id': 'loan30', 'prosper_rating': 'B', 'expected_return': 0.066},
+    {'id': 'loan31', 'prosper_rating': 'AA', 'expected_return': 0.03},
+    {'id': 'loan32', 'prosper_rating': 'A', 'expected_return': 0.068},
+    {'id': 'loan33', 'prosper_rating': 'B', 'expected_return': 0.076},
+    {'id': 'loan34', 'prosper_rating': 'C', 'expected_return': 0.059},
+    {'id': 'loan35', 'prosper_rating': 'B', 'expected_return': 0.054},
+    {'id': 'loan36', 'prosper_rating': 'AA', 'expected_return': 0.018},
+    {'id': 'loan37', 'prosper_rating': 'A', 'expected_return': 0.071},
+    {'id': 'loan38', 'prosper_rating': 'B', 'expected_return': 0.077},
+    {'id': 'loan39', 'prosper_rating': 'C', 'expected_return': 0.063},
+    {'id': 'loan40', 'prosper_rating': 'B', 'expected_return': 0.056},
+    {'id': 'loan41', 'prosper_rating': 'AA', 'expected_return': 0.028},
+    {'id': 'loan42', 'prosper_rating': 'A', 'expected_return': 0.073},
+    {'id': 'loan43', 'prosper_rating': 'B', 'expected_return': 0.079},
+    {'id': 'loan44', 'prosper_rating': 'C', 'expected_return': 0.065},
+    {'id': 'loan45', 'prosper_rating': 'B', 'expected_return': 0.059},
 ]
 
 portfolio = [
-    {'id': 'loan16', 'prosper_rating': 'AA', 'expected_return': 0.025},
-    {'id': 'loan17', 'prosper_rating': 'A', 'expected_return': 0.07},
-    {'id': 'loan18', 'prosper_rating': 'B', 'expected_return': 0.078},
-    {'id': 'loan19', 'prosper_rating': 'C', 'expected_return': 0.062},
-    {'id': 'loan20', 'prosper_rating': 'B', 'expected_return': 0.057},
-    {'id': 'loan21', 'prosper_rating': 'AA', 'expected_return': 0.022},
-    {'id': 'loan22', 'prosper_rating': 'A', 'expected_return': 0.067},
-    {'id': 'loan23', 'prosper_rating': 'B', 'expected_return': 0.072},
-    {'id': 'loan24', 'prosper_rating': 'C', 'expected_return': 0.058},
-    {'id': 'loan25', 'prosper_rating': 'B', 'expected_return': 0.055},
-    {'id': 'loan26', 'prosper_rating': 'AA', 'expected_return': 0.02},
-    {'id': 'loan27', 'prosper_rating': 'A', 'expected_return': 0.075},
-    {'id': 'loan28', 'prosper_rating': 'B', 'expected_return': 0.079},
-    {'id': 'loan29', 'prosper_rating': 'C', 'expected_return': 0.065},
-    {'id': 'loan30', 'prosper_rating': 'B', 'expected_return': 0.058},
+    {'id': 'loan46', 'prosper_rating': 'AA', 'expected_return': 0.025},
+    {'id': 'loan47', 'prosper_rating': 'A', 'expected_return': 0.077},
+    {'id': 'loan48', 'prosper_rating': 'B', 'expected_return': 0.082},
+    {'id': 'loan49', 'prosper_rating': 'C', 'expected_return': 0.068},
+    {'id': 'loan50', 'prosper_rating': 'B', 'expected_return': 0.062},
+    {'id': 'loan51', 'prosper_rating': 'AA', 'expected_return': 0.022},
+    {'id': 'loan52', 'prosper_rating': 'A', 'expected_return': 0.075},
+    {'id': 'loan53', 'prosper_rating': 'B', 'expected_return': 0.078},
+    {'id': 'loan54', 'prosper_rating': 'C', 'expected_return': 0.067},
+    {'id': 'loan55', 'prosper_rating': 'B', 'expected_return': 0.061},
+    {'id': 'loan56', 'prosper_rating': 'AA', 'expected_return': 0.021},
+    {'id': 'loan57', 'prosper_rating': 'A', 'expected_return': 0.074},
+    {'id': 'loan58', 'prosper_rating': 'B', 'expected_return': 0.077},
+    {'id': 'loan59', 'prosper_rating': 'C', 'expected_return': 0.066},
+    {'id': 'loan60', 'prosper_rating': 'B', 'expected_return': 0.06},
 ]
 
 solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
 
-for solver in solvers:
-    print(f"Using solver: {solver}")
-    selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02)
-    print(f"Selected loans: {selected_loans}\n")
 
-# selected_loans = optimize_portfolio(3, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
+
+# for solver in solvers:
+#     print(f"Using solver: {solver}")
+#     selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02, risk_preference=risk_preference)
+#     print(f"Selected loans: {selected_loans}\n")
+
+
+selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02, risk_weight=0.5)
+print(f"Selected loans (weighted preferences): {selected_loans}")
+
+selected_loans2 = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02)
+print(f"Selected loans (unweighted preference): {selected_loans2}")
