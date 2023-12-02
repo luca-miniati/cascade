@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from pulp import LpProblem, LpVariable, lpSum, LpMaximize
 from pulp import GLPK_CMD, PYGLPK, CPLEX_CMD, CPLEX_PY, GUROBI, GUROBI_CMD, MOSEK, XPRESS, XPRESS_PY, PULP_CBC_CMD, COIN_CMD, COINMP_DLL, CHOCO_CMD, MIPCL_CMD, SCIP_CMD, HiGHS_CMD
 import pulp as pl
@@ -100,28 +100,21 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, risk_weight=1, optim
 
 
 @app.route('/optimize_portfolio_route', methods=['GET', 'POST'])
-def optimize_portfolio_route(portfolio, max_loans, listings, optimization_solver, risk_free_rate):
-    return optimize_portfolio(portfolio=portfolio, max_loans=max_loans, listings=listings, optimization_solver=optimization_solver, risk_free_rate=risk_free_rate)
+def optimize_portfolio_route():
+    '''
+    
+    max_loans = request.args.get("max_loans")
+    listings = request.args.get("listings")
+    risk_free_rate = request.args.get("risk_Free_rate")
+    risk_weight
+    optimization_solver = request.args.get("optimization_solver")
+    portfolio = request.args.get("portfolio")
+    '''
+    return optimize_portfolio(**request.args)
 
-# if __name__ == '__main__':
-#     app.run()
-'''
-listings = [
-    {'id' : "loan1", 'prosper_rating' : "AA", 'expected_return' : 0.05},
-    {'id' : "loan2", 'prosper_rating' : "A", 'expected_return' : 0.06},
-    {'id' : "loan3", 'prosper_rating' : "B", 'expected_return' : 0.07},
-    {'id' : "loan4", 'prosper_rating' : "C", 'expected_return' : 0.08},
-    {'id' : "loan5", 'prosper_rating' : "B", 'expected_return' : 0.065},
-]
+if __name__ == '__main__':
+    app.run()
 
-portfolio = [
-    {'id' : "loan6", 'prosper_rating' : "AA", 'expected_return' : 0.02},
-    {'id' : "loan7", 'prosper_rating' : "A", 'expected_return' : 0.07},
-    {'id' : "loan8", 'prosper_rating' : "B", 'expected_return' : 0.075},
-    {'id' : "loan9", 'prosper_rating' : "C", 'expected_return' : 0.06},
-    {'id' : "loan10", 'prosper_rating' : "B", 'expected_return' : 0.055},
-]
-'''
 listings = [
     {'id': 'loan1', 'prosper_rating': 'AA', 'expected_return': 0.05},
     {'id': 'loan2', 'prosper_rating': 'A', 'expected_return': 0.06},
@@ -190,12 +183,6 @@ portfolio = [
 
 solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
 
-
-
-# for solver in solvers:
-#     print(f"Using solver: {solver}")
-#     selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02, risk_preference=risk_preference)
-#     print(f"Selected loans: {selected_loans}\n")
 
 
 selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02, risk_weight=0.5)
