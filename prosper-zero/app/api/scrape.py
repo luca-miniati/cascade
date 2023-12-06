@@ -16,10 +16,17 @@ access_token, refresh_token, expires_at = authenticate_personal(
     client_id, client_secret, username, password
 )
 
-listings = get_listings(
+pre_processed_listings = get_listings(
     access_token,
     {
-        'limit': 1,
+        'limit': 100,
         'biddable': False
     }
 )
+listings = []
+for i in range(len(pre_processed_listings['result'])):
+    listings.append({
+        'listing_number' : pre_processed_listings['result'][i]['listing_number'],
+        'prosper_rating' : pre_processed_listings['result'][i]['prosper_rating'],
+        'lender_yield' : pre_processed_listings['result'][i]['lender_yield'],
+    })
