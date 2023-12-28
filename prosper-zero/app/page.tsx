@@ -1,18 +1,18 @@
-"use client";
+import React, { FC } from 'react';
+import Background from './components/background';
+import Navbar from './components/navbar';
+import Hero from './components/hero';
 
-import { useRouter } from "next/navigation";
-
-const Home = () => {
-  const router = useRouter();
-  const handleClick = () => {
-    router.push("/api/auth/signin/prosper");
-  }
-  return (
-    <main>
-      <h1>ProsperZero</h1>
-      <button onClick={handleClick}>Sign in with Prosper</button>
-    </main>
-  );
+const Home: FC = () => {
+    const backgroundImageUrl = '/gradients/02.png';
+    return (
+        <main className="h-screen text-white">
+            <Background url={backgroundImageUrl}>
+                <Navbar/>
+                <Hero/>
+            </Background>
+        </main>
+   );
 };
 
 export default Home;
