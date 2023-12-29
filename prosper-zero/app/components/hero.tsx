@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { LinkButton } from './button';
+import Link from 'next/link';
 
 const Hero: FC = () => {
     return(
@@ -8,7 +8,9 @@ const Hero: FC = () => {
                 <p className="inline-block text-5xl text-center mb-4">
                     Peer-to-peer loan optimization, hands-free
                 </p>
-                <LinkButton text="Learn more" href="/"/>
+                <Link className="bg-indigo-500 hover:bg-indigo-400 w-fit rounded" href="howItWorks">
+                    <p className="p-2 inline">Learn more</p>
+                </Link>
             </div>
         </div>
     );

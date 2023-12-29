@@ -7,15 +7,18 @@ import { signIn } from 'next-auth/react';
 const NavbarButtons: FC = () => {
     return (
         <div className="flex space-x-8 items-center p-8">
-            <Link href="/howItWorks">How it works</Link>
-            <Link href="/contact">Contact</Link>
+            <Link className="w-fit rounded" href="howItWorks">
+                <p className="p-2 inline text-slate-400 hover:text-white text">How it works</p>
+            </Link>
+            <Link className="w-fit rounded" href="contact">
+                <p className="p-2 inline text-slate-400 hover:text-white text">Contact</p>
+            </Link>
             <button onClick={() => signIn("prosper")}>
-                <p>Log in</p>
+                <p className="p-2 inline text-slate-400 hover:text-white text">Log in</p>
             </button>
-            {/* <ActionButton action={signIn} text="Sign up"/> */}
-            <button className="bg-indigo w-fit rounded" onClick={() => signIn("prosper")}>
+            <Link className="bg-indigo-500 hover:bg-indigo-400 w-fit rounded-md" href="/signUp">
                 <p className="p-2 inline">Sign up</p>
-            </button>
+            </Link>
         </div>
     );
 };

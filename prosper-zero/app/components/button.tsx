@@ -11,7 +11,7 @@ interface LinkButtonProps {
 export const LinkButton: FC<LinkButtonProps> = ({ href, text }) => {
     return (
         <Link className="bg-indigo w-fit rounded" href={href}>
-            <p className="p-2 inline">{text}</p>
+            <p className="p-2 inline text-slate-400 hover:text-white text">{text}</p>
         </Link>
     );
 };
