@@ -11,9 +11,10 @@
   "dependencies": {
     "next": "^14.0.1",
     "next-auth": "^4.24.5",
-    "node": "^21.1.0",
+    "node": "^20.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "vercel": "^33.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
