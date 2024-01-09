@@ -1,24 +1,26 @@
 from flask import Flask, request
 from pulp import LpProblem, LpVariable, lpSum, LpMaximize
 from pulp import GLPK_CMD, PYGLPK, CPLEX_CMD, CPLEX_PY, GUROBI, GUROBI_CMD, MOSEK, XPRESS, XPRESS_PY, PULP_CBC_CMD, COIN_CMD, COINMP_DLL, CHOCO_CMD, MIPCL_CMD, SCIP_CMD, HiGHS_CMD
-import pulp as pl
+# import pulp as pl
 import math
 
 app = Flask(__name__)
 
+
 def get_risk_buckets():
-    return { 
-        "AA" : 0.059844,
-        "A" :  0.106875,
-        "B" :  0.158608,
-        "C" :  0.230475,
-        "D" :  0.285390,
-        "E" :  0.286738,
-        "HR" : 0.341582,
+    return {
+        "AA": 0.059844,
+        "A":  0.106875,
+        "B":  0.158608,
+        "C":  0.230475,
+        "D":  0.285390,
+        "E":  0.286738,
+        "HR": 0.341582,
     }
 
+
 optimization_solvers = {
-    'GLPK_CMD' : GLPK_CMD, 
+    'GLPK_CMD': GLPK_CMD, 
     'PYGLPK' : PYGLPK, 
     'CPLEX_CMD' : CPLEX_CMD, 
     'CPLEX_PY' : CPLEX_PY, 

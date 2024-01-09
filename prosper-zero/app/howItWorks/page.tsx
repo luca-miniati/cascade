@@ -1,13 +1,13 @@
 import Background from '../components/background';
-import Navbar from '../components/navbar';
+import Navbar from '../components/topNavbar';
 import React, { FC } from 'react';
 
 const HowItWorksPage: FC = () => {
-    const backgroundImageUrl = '/gradients/02.png';
+    const backgroundImageUrl = '/gradients/05.png';
     return (
         <main className="h-screen text-white">
-            <Background url={backgroundImageUrl}>
-                <Navbar/>
+            <Background url={backgroundImageUrl} flexDirection='column'>
+                <Navbar navbarIndex={0}/>
                 <div className="flex flex-col grow justify-center items-center">
                     <div className="flex flex-col justify-center items-center w-3/4">
                         <p className="inline-block text-5xl text-center mb-4">

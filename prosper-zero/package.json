@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@ant-design/nextjs-registry": "^1.0.0",
+    "@heroicons/react": "^2.1.1",
+    "antd": "^5.12.7",
     "next": "^14.0.1",
     "next-auth": "^4.24.5",
     "node": "^20.5.0",

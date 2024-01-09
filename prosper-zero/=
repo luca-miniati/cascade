@@ -1,0 +1,108 @@
+'use client';
+
+import React, { FC, useState } from 'react';
+import { Checkbox, InputNumber, Select  } from 'antd';
+
+interface InvestmentStrategyProps {
+
+};
+
+interface InvestmentStrategyFilters {
+    riskTolerance: boolean;
+    minYield: boolean;
+    maxYield: boolean;
+    minProsperRating: boolean;
+    maxProsperRating: boolean;
+}
+
+interface FilterProps {
+    key: string;
+    filterOnChange: (arg0: string) => void,
+    filterDisabled: InvestmentStrategyFilters, 
+    selectOptions?: string[];
+}
+
+const Filter: FC<FilterProps> = ({ key, filterOnChange, filterDisabled, selectOptions }) => {
+    return (
+        <div className="flex items-center my-3 space-x-6">
+        <Checkbox onChange={() => filterOnChange(key)}>
+        </Checkbox>
+        <p>{key}</p>
+        {key.includes('Rating')
+        ? <Select options={selectOptions} disabled={filterDisabled[key]} className="w-16" />
+        : <InputNumber disabled={disabled} />}
+        </div>
+    );
+};
+
+const InvestmentStrategy: FC<InvestmentStrategyProps> = () => {
+
+    const [investmentStrategyFiltersDisabled, setInvestmentStrategyFilters] = useState(
+        getInitialFilters()
+    );
+
+    function getInitialFilters(): InvestmentStrategyFilters {
+        const initialFilters: InvestmentStrategyFilters = {} as InvestmentStrategyFilters;
+
+        Object.keys(initialFilters).forEach((key) => {
+            initialFilters[key as keyof InvestmentStrategyFilters] = false;
+        });
+
+        return initialFilters;
+    }
+
+    const prosperRatingOptions = [
+        { label: "AA", value: "AA" }, 
+        { label: "A", value: "A" }, 
+        { label: "B", value: "B" }, 
+        { label: "C", value: "C" }, 
+        { label: "D", value: "D" }, 
+        { label: "E", value: "E" }, 
+        { label: "HR", value: "HR" }, 
+    ];
+
+    const toggleFilter = (filterKey: keyof InvestmentStrategyFilters) => {
+        setInvestmentStrategyFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterKey]: !prevFilters[filterKey],
+        }));
+    };
+
+    return (
+        <>
+            <p className="font-semibold text-xl mb-6">Investment Strategy</p>
+            <div className="flex items-center my-3 space-x-6">
+                <Checkbox onChange={() => toggleFilter("riskTolerance")}>
+                </Checkbox>
+                <p>Risk Tolerance</p>
+                <InputNumber disabled={investmentStrategyFiltersDisabled["riskTolerance"]}/>
+            </div>
+            <div className="flex items-center my-3 space-x-6">
+                <Checkbox onChange={() => toggleFilter("minYield")}>
+                </Checkbox>
+                <p>Min. Yield</p>
+                <InputNumber disabled={investmentStrategyFiltersDisabled["minYield"]}/>
+            </div>
+            <div className="flex items-center my-3 space-x-6">
+                <Checkbox onChange={() => toggleFilter("maxYield")}>
+                </Checkbox>
+                <p>Max. Yield</p>
+                <InputNumber disabled={investmentStrategyFiltersDisabled["maxYield"]}/>
+            </div>
+            <div className="flex items-center my-3 space-x-6">
+                <Checkbox onChange={() => toggleFilter("minProsperRating")}>
+                </Checkbox>
+                <p>Min. Prosper Rating</p>
+                <Select options={prosperRatingOptions} disabled={investmentStrategyFiltersDisabled["minProsperRating"]} className="w-16"/>
+            </div>
+            <div className="flex items-center my-3 space-x-6">
+                <Checkbox onChange={() => toggleFilter("maxProsperRating")}>
+                </Checkbox>
+                <p>Max. Prosper Rating</p>
+                <Select options={prosperRatingOptions} disabled={investmentStrategyFiltersDisabled["maxProsperRating"]} className="w-16"/>
+            </div>
+        </>
+    );
+};
+
+export default InvestmentStrategy;
