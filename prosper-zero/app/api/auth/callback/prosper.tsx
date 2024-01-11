@@ -13,7 +13,7 @@ const CallbackPage = () => {
         // TODO: check if state is valid
 
         if (authKey) {
-            console.log('Got Auth Key');
+            console.log('Got Auth Key: ' + authKey);
             router.push('/');
         }
 
@@ -25,4 +25,3 @@ const CallbackPage = () => {
 }
 
 export default CallbackPage;
-
