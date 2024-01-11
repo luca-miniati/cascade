@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 const CallbackPage = () => {
     const router =  useRouter();
+    const searchParams = useSearchParams();
     
     useEffect(() => {
-        const searchParams = useSearchParams();
         const authKey = searchParams.get('auth_key');
 
         // TODO: check if state is valid
