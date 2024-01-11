@@ -196,4 +196,3 @@ print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=s
 selected_loans2 = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
 print(f"Selected loans (unweighted preference): {selected_loans2}")
 print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans2)}")
-
