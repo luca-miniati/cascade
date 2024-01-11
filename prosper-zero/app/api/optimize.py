@@ -1,26 +1,25 @@
 from flask import Flask, request
 from pulp import LpProblem, LpVariable, lpSum, LpMaximize
 from pulp import GLPK_CMD, PYGLPK, CPLEX_CMD, CPLEX_PY, GUROBI, GUROBI_CMD, MOSEK, XPRESS, XPRESS_PY, PULP_CBC_CMD, COIN_CMD, COINMP_DLL, CHOCO_CMD, MIPCL_CMD, SCIP_CMD, HiGHS_CMD
-# import pulp as pl
+import pulp as pl
 import math
+from performance import get_prosper_ratings
 
 app = Flask(__name__)
 
-
 def get_risk_buckets():
-    return {
-        "AA": 0.059844,
-        "A":  0.106875,
-        "B":  0.158608,
-        "C":  0.230475,
-        "D":  0.285390,
-        "E":  0.286738,
-        "HR": 0.341582,
+    return { 
+        "AA" : 0.039844,
+        "A" :  0.086875,
+        "B" :  0.118608,
+        "C" :  0.230475,
+        "D" :  0.285390,
+        "E" :  0.326738,
+        "HR" : 0.381582,
     }
 
-
 optimization_solvers = {
-    'GLPK_CMD': GLPK_CMD, 
+    'GLPK_CMD' : GLPK_CMD, 
     'PYGLPK' : PYGLPK, 
     'CPLEX_CMD' : CPLEX_CMD, 
     'CPLEX_PY' : CPLEX_PY, 
@@ -42,7 +41,7 @@ def get_expected_portfolio_return(portfolio):
     num_loans = len(portfolio)
     weights = [1 / num_loans] * num_loans
 
-    portfolio_return = sum(weight * loan['expected_return'] for weight, loan in zip(weights, portfolio))
+    portfolio_return = sum(weight * loan['lender_yield'] for weight, loan in zip(weights, portfolio))
     return portfolio_return
 
 def get_sharpe_ratio(portfolio, risk_free_rate):
@@ -50,14 +49,15 @@ def get_sharpe_ratio(portfolio, risk_free_rate):
     
     size = len(portfolio)
 
-    mean_return = (sum(loan['expected_return'] for loan in portfolio)) / size
-    risk_free_return = (1 - risk_free_rate) * mean_return
+    mean_return = (sum(loan['lender_yield'] for loan in portfolio)) / size
+    # risk_free_return = (1 - risk_free_rate) * mean_return
+    risk_free_return = risk_free_rate
 
-    standard_dev = math.sqrt((sum((loan['expected_return'] - mean_return)**2 for loan in portfolio)) / size)
+    standard_dev = math.sqrt((sum((loan['lender_yield'] - mean_return)**2 for loan in portfolio)) / size)
 
-    expected_value = sum(loan['expected_return'] * risk_buckets[loan['prosper_rating']] for loan in portfolio)
+    # expected_value = sum(loan['lender_yield'] * risk_buckets[loan['prosper_rating']] for loan in portfolio)
 
-    sharpe_ratio = (expected_value - risk_free_return) / standard_dev
+    sharpe_ratio = (mean_return - risk_free_return) / standard_dev
     
     return sharpe_ratio
 
@@ -81,8 +81,8 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, risk_weight=1, optim
     model = LpProblem(name="Portfolio_Optimization", sense=LpMaximize)
 
 
-    risk_adjusted_returns = [(loan["expected_return"] - (risk_weight * loan["expected_return"] * risk_buckets[loan["prosper_rating"]])) for loan in listings]
-    
+    risk_adjusted_returns = [(loan["lender_yield"] - (risk_weight * loan["lender_yield"] * risk_buckets[loan["prosper_rating"]])) for loan in listings]
+
     loans = range(len(listings))
     x = LpVariable.dicts("loan", loans, cat="Binary")
     if not portfolio:
@@ -96,7 +96,7 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, risk_weight=1, optim
         model.solve(optimization_solvers[optimization_solver](msg=False))
 
 
-    selected_loans = [listings[i]['id'] for i in loans if x[i].value() == 1]
+    selected_loans = [listings[i]['listing_number'] for i in loans if x[i].value() == 1]
 
     return selected_loans
 
@@ -114,8 +114,8 @@ def optimize_portfolio_route():
     '''
     return optimize_portfolio(**request.args)
 
-if __name__ == '__main__':
-    app.run()
+# if __name__ == '__main__':
+#     app.run()
 
 listings = [
     {'listing_number': 'loan1', 'prosper_rating': 'AA', 'lender_yield': 0.05},
@@ -163,6 +163,7 @@ listings = [
     {'listing_number': 'loan43', 'prosper_rating': 'B', 'lender_yield': 0.079},
     {'listing_number': 'loan44', 'prosper_rating': 'C', 'lender_yield': 0.065},
     {'listing_number': 'loan45', 'prosper_rating': 'B', 'lender_yield': 0.059},
+
 ]
 
 portfolio = [
@@ -184,12 +185,15 @@ portfolio = [
 ]
 
 
-solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
+# solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
 
 
 
-selected_loans = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02, risk_weight=0.5)
+selected_loans = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04, risk_weight=0.5)
 print(f"Selected loans (weighted preferences): {selected_loans}")
+print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans)}")
 
-selected_loans2 = optimize_portfolio(5, listings, portfolio=portfolio, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.02)
+selected_loans2 = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
 print(f"Selected loans (unweighted preference): {selected_loans2}")
+print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans2)}")
+

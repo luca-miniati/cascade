@@ -1,5 +1,5 @@
-/data/clean/
-/data/raw/
+prosper-zero/app/data/clean/
+prosper-zero/app/data/raw/
 __pycache__/
 .DS_Store
 .env
