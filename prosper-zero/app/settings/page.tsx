@@ -10,7 +10,7 @@ import InvestmentStrategy from 'app/components/settings/strategy';
 import Filters from 'app/components/settings/filters';
 
 const SettingsPage: FC = () => {
-    const backgroundImageUrl:string = '/gradients/05.png';
+    const backgroundImageUrl:string = '/gradients/02.png';
 
     return (
         <ConfigProvider
