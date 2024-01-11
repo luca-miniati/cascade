@@ -14,7 +14,7 @@ const MonthlyAllocation: FC<MonthlyAllocationProps> = () => {
             <p>
                 How much cash to allocate for investing, refreshed every<br />
                 month. If cash is left over after a month, it does not carry<br />
-                over; the next cycle's allocation is determined by the<br />
+                over; the next cycle&#39;s allocation is determined by the<br />
                 Relative/Fixed Amount.
             </p>
         </div>
