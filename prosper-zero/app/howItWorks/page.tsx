@@ -3,7 +3,7 @@ import Navbar from '../components/topNavbar';
 import React, { FC } from 'react';
 
 const HowItWorksPage: FC = () => {
-    const backgroundImageUrl = '/gradients/05.png';
+    const backgroundImageUrl = '/gradients/02.png';
     return (
         <main className="h-screen text-white">
             <Background url={backgroundImageUrl} flexDirection='column'>
