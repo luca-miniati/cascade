@@ -3,7 +3,7 @@ import Background from '../components/background';
 import Navbar from '../components/sideNavbar';
 
 const HistoryPage: FC = () => {
-    const backgroundImageUrl:string = '/gradients/05.png';
+    const backgroundImageUrl:string = '/gradients/02.png';
 
     return (
         <main className="h-screen text-white">
