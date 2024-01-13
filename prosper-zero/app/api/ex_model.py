@@ -1,3 +1,5 @@
+from decimal import Decimal, ROUND_HALF_UP
+
 def pick_listings_ratio(max_loans, listings, AA=0, A=0, B=0, C=0, D=0, E=0, HR=0):
     """
     Optimize a portfolio of loans using the ratio of loan types given.
@@ -22,14 +24,27 @@ def pick_listings_ratio(max_loans, listings, AA=0, A=0, B=0, C=0, D=0, E=0, HR=0
     Returns:
     - selected_loans (list): List of selected loan IDs.
     """
-    ratios = [AA, A, B, C, D, E, HR]
-    selected_loans = []
-
     if max_loans > len(listings):
         max_loans = len(listings)
 
-    for ratio in ratios:
-        if ratio != 0:
-            # do something :P
-            return 0
-    return 0
+    ratios = [AA, A, B, C, D, E, HR]
+    sum_ratios = sum(ratios)
+    scaled_ratios = [round_half_up(ratio * (max_loans / sum_ratios)) for ratio in ratios]
+    selected_loans = []
+
+    for ratio, pr in zip(scaled_ratios, ["AA", "A", "B", "C", "D", "E", "HR"]):
+        sorted_listings = filter_and_sort_listings(listings, pr, ratio)
+        if ratio + len(selected_loans) > max_loans:
+            selected_loans += [listing['listing_number'] for listing in sorted_listings][:max_loans - len(selected_loans)]
+        else:
+            selected_loans += [listing['listing_number'] for listing in sorted_listings]
+
+    return selected_loans
+
+def filter_and_sort_listings(listings, prosper_rating, n):
+    filtered_listings = [listing for listing in listings if listing['prosper_rating'] == prosper_rating]
+    sorted_listings = sorted(filtered_listings, key=lambda x: x['lender_yield'], reverse=True)[:n]
+    return sorted_listings
+
+def round_half_up(n):
+    return int(Decimal(str(n)).quantize(Decimal('1.'), rounding=ROUND_HALF_UP))

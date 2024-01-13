@@ -80,8 +80,7 @@ def optimize_portfolio(max_loans, listings, risk_free_rate, risk_weight=1, optim
 
     model = LpProblem(name="Portfolio_Optimization", sense=LpMaximize)
 
-
-    risk_adjusted_returns = [(loan["lender_yield"] - (risk_weight * loan["lender_yield"] * risk_buckets[loan["prosper_rating"]])) for loan in listings]
+    risk_adjusted_returns = [(25 * loan["lender_yield"] - (risk_weight * 25 * risk_buckets[loan["prosper_rating"]])) for loan in listings]
 
     loans = range(len(listings))
     x = LpVariable.dicts("loan", loans, cat="Binary")
@@ -188,7 +187,7 @@ portfolio = [
 # solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
 
 
-
+'''
 selected_loans = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04, risk_weight=0.5)
 print(f"Selected loans (weighted preferences): {selected_loans}")
 print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans)}")
@@ -196,4 +195,4 @@ print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=s
 selected_loans2 = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
 print(f"Selected loans (unweighted preference): {selected_loans2}")
 print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans2)}")
-
+'''
