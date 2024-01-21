@@ -13,13 +13,13 @@ def pick_listings_ratio(max_loans, listings, AA=0, A=0, B=0, C=0, D=0, E=0, HR=0
     Parameters:
     - max_loans (int): Maximum number of loans to select.
     - listings (list): List of loan dictionaries.
-    - AA (int): Ratio of AA loans to pick 
-    - A (int): Ratio of A loans to pick 
-    - B (int): Ratio of B loans to pick
-    - C (int): Ratio of C loans to pick
-    - D (int): Ratio of D loans to pick
-    - E (int): Ratio of E loans to pick
-    - HR (int): Ratio of HR loans to pick
+    - AA (int/double): Ratio of AA loans to pick 
+    - A (int/double): Ratio of A loans to pick 
+    - B (int/double): Ratio of B loans to pick
+    - C (int/double): Ratio of C loans to pick
+    - D (int/double): Ratio of D loans to pick
+    - E (int/double): Ratio of E loans to pick
+    - HR (int/double): Ratio of HR loans to pick
 
     Returns:
     - selected_loans (list): List of selected loan IDs.

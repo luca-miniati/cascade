@@ -6,3 +6,4 @@ __pycache__/
 .ipynb_checkpoints/
 label_encoders/
 .vercel
+node_modules/

@@ -17,26 +17,29 @@ listings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data',
 data = pd.read_csv(listings_path)
 data = data.loc[4000:4070]
 test_listings =  data.to_dict(orient='records')
-max_loans = 10
+max_loans = 15
 
-print(f"LISTING PATH:: {listings_path}")
+print(f"\nLISTING PATH:: {listings_path}")
 print(f"# LISTINGS:: {len(test_listings)}")
 print(f"MAX LOANS:: {max_loans}")
 print("-----------------------------\n")
 
-ex_model_loans = pick_listings_ratio(max_loans=max_loans, listings=test_listings, AA=2, A=5, B=3, C=1, E=1)
-print(f"PR distribution (ex_model): {get_prosper_ratings(listings=test_listings, selected_loans=ex_model_loans)}")
+AA_B_weighted_mix = pick_listings_ratio(max_loans=max_loans, listings=test_listings, AA=0.2, A=0.45, B=0.25, C=0.1)
+# print(f"PR distribution (AA-B): {get_prosper_ratings(listings=test_listings, selected_loans=AA_B_weighted_mix)}")
+print("AA-B mix")
+print(f"total return: {get_total_return(listings=test_listings, selected_loans=AA_B_weighted_mix)}")
+print(f"default rate: {get_default_rate(listings=test_listings, selected_loans=AA_B_weighted_mix)}")
 
-'''
+
 for r in np.arange(0.1, 1.1, 0.1):
     model_selected_loans = optimize_portfolio(max_loans=max_loans, listings=test_listings, portfolio=portfolio, risk_free_rate=0.02, risk_weight=r)
     print(f"MODEL SELECTED LOANS, risk_weight={r}")
     # print(f"loans: {model_selected_loans}")
-    # print(f"total return: {get_total_return(listings=test_listings, selected_loans=model_selected_loans)}")
-    # print(f"default rate: {get_default_rate(listings=test_listings, selected_loans=model_selected_loans)}")
-    print(f"PR distribution: {get_prosper_ratings(listings=test_listings, selected_loans=model_selected_loans)}")
+    print(f"total return: {get_total_return(listings=test_listings, selected_loans=model_selected_loans)}")
+    print(f"default rate: {get_default_rate(listings=test_listings, selected_loans=model_selected_loans)}")
+    # print(f"PR distribution: {get_prosper_ratings(listings=test_listings, selected_loans=model_selected_loans)}")
     print("-----------------------------\n")
-'''
+
 
 
 # random_selected_loans = pick_random_listings(max_loans=max_loans, listings=test_listings)
