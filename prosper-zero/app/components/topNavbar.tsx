@@ -22,6 +22,7 @@ const Navbar: FC<navbarProps> = ({ navbarIndex }) => {
     const logInWithProsper = async () => {
         const state = generateRandomState(); 
         const clientId = process.env.NEXT_PUBLIC_PROSPER_ID ?? '';
+        console.log(clientId);
         const url = `https://www.prosper.com/oauth?client_id=${clientId}&response_type=auth_key&state=${state}`;
         router.push(url);
     }
