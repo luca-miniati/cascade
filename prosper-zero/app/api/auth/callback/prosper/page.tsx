@@ -14,8 +14,9 @@ const CallbackPage = () => {
     
     useEffect(() => {
         const authKey = searchParams.get('auth_key');
-        console.log("HERES THE KEYS:");
-        console.log(searchParams.keys());
+        for (const key in searchParams.keys()) {
+            console.log(key);
+        }
 
         // const { error } = await supabase
         // .from('users')
