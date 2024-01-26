@@ -2,7 +2,11 @@
   "dependencies": {
     "csv-parse": "^5.5.3",
     "debug": "^4.3.4",
+    "dotenv": "^16.4.1",
     "fs": "^0.0.1-security",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.39.3"
   }
 }
