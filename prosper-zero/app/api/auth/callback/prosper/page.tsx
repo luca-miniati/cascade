@@ -14,8 +14,10 @@ const CallbackPage = () => {
     
     useEffect(() => {
         const authKey = searchParams.get('auth_key');
-        for (const key in searchParams.keys()) {
-            console.log(key);
+        const scope = searchParams.get('scope');
+
+        if (scope) {
+            console.log(scope);
         }
 
         // const { error } = await supabase
