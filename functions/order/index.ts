@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-import { optimize } from '../optimize/index.ts';
+// import { optimize } from '../optimize/index.ts';
 
 console.log("Hello from Functions!")
 

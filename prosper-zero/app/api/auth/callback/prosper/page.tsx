@@ -17,7 +17,9 @@ const CallbackPage = () => {
         const scope = searchParams.get('scope');
 
         if (scope) {
-            console.log(scope);
+            if (scope != 'read_listing read_loan read_note write_invest_order write_prosper_account write_user_profile') {
+                console.log('access not given');
+            }
         }
 
         // const { error } = await supabase
