@@ -222,4 +222,4 @@ for loans_path in all_loans:
     start, end = re.search(r'_(\d{4})(?:\d{4})(?:to)(\d{4})', loans_path).groups()
     clean_loans_data.to_csv(f'{save_path}/clean/{start}_{end}_backtesting.csv', index=False)
     
-    print(f'WRITTED {start}-{end}_backtesting')
+    print(f'WRITTEN {start}-{end}_backtesting')
