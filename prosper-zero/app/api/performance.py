@@ -48,3 +48,12 @@ def get_prosper_ratings(listings, selected_loans):
         elif pr == "HR":
             rating_counts[6] += 1
     return rating_counts
+
+def get_pr_distribution(listings, selected_loans):
+    ratings = get_prosper_ratings(listings=listings, selected_loans=selected_loans)
+    
+    total = sum(ratings)
+    for i in range(len(ratings)):
+        ratings[i] = ratings[i] / total
+        
+    return ratings

@@ -181,17 +181,3 @@ portfolio = [
     {'listing_number': 'loan59', 'prosper_rating': 'C', 'lender_yield': 0.066},
     {'listing_number': 'loan60', 'prosper_rating': 'B', 'lender_yield': 0.06},
 ]
-
-
-# solvers = ['GLPK_CMD', 'PYGLPK', 'CPLEX_CMD', 'CPLEX_PY', 'GUROBI', 'GUROBI_CMD', 'MOSEK', 'XPRESS', 'XPRESS', 'XPRESS_PY', 'PULP_CBC_CMD', 'COIN_CMD', 'COINMP_DLL', 'CHOCO_CMD', 'MIPCL_CMD', 'SCIP_CMD', 'HiGHS_CMD']
-
-
-'''
-selected_loans = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04, risk_weight=0.5)
-print(f"Selected loans (weighted preferences): {selected_loans}")
-print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans)}")
-
-selected_loans2 = optimize_portfolio(10, listings, optimization_solver='PULP_CBC_CMD', risk_free_rate=0.04)
-print(f"Selected loans (unweighted preference): {selected_loans2}")
-print(f"PR distribution {get_prosper_ratings(listings=listings, selected_loans=selected_loans2)}")
-'''
