@@ -5,7 +5,7 @@ import GLPK from 'npm:glpk.js';
     * ProsperZero
         * FIELDS
         * this.portfolio : Loan[]
-        * this.riskWeight : number
+        * this.optimizationType: OptimizationType
         * FUNCTIONS
         * this.optimize : Listings[], allocation -> Listings[]
 */
@@ -19,7 +19,6 @@ export class ProsperZero {
     constructor(portfolio: Loan[], optimizationType: OptimizationType) {
         this.portfolio = portfolio;
         this.optimizationType = optimizationType;
-
     }
 
     getListingValuation(listing: Listing): number {
@@ -30,18 +29,20 @@ export class ProsperZero {
             }
 
             case OptimizationType.MAX_CASH_FLOW: {
+                // Monthly payment
                 return listing.lenderYield -
                     listing.lenderYield * DEFAULT_PROBS[listing.prosperRating];
             }
 
             default: {
+                // add coefficients
                 return listing.lenderYield -
                     listing.lenderYield * DEFAULT_PROBS[listing.prosperRating];
             }
         }
     }
 
-    optimize(listings: Listing[], maxAllocation: number) {
+    optimize(listings: Listing[], maxAllocation: number): Listing[]  {
         const numListings: number = listings.length;
         const listingBinaries: string[] = [];
         const listingVars: Object[] = [];
@@ -77,7 +78,15 @@ export class ProsperZero {
         }
 
         const res: Object = glpk.solve(lp);
-        console.log(res);
+        const listingsToBuy: Listing[] = [];
+        for (let i = 0; i < numListings; i++) {
+            const id = listingBinaries[i];
+            if (res['result']['vars'][id] == 1) {
+                listingsToBuy.push(listings[i]);
+            }
+        }
+
+        return listingsToBuy;
     }
 }
 
@@ -92,5 +101,6 @@ const listings = [
     new Listing('7', 0.1745, 'C', 2, 'COMPLETED', 10000.0),
 ];
 
-const model = new ProsperZero([], OptimizationType.MAX_INTEREST);
-model.optimize(listings, 100.0);
+const model = new ProsperZero([], OptimizationType.MAX_CASH_FLOW);
+const res = model.optimize(listings, 100.0);
+console.log(res);
