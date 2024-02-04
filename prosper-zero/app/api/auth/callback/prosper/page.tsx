@@ -2,15 +2,15 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-// import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
 
 const CallbackPage = () => {
     const router =  useRouter();
     const searchParams = useSearchParams();
     console.log(searchParams);
-    const url = process.env['SUPABASE_URL'];
-    const key = process.env['SUPABASE_ANON_KEY'];
+    const url = process.env['SUPABASE_URL'] ?? '';
+    const key = process.env['SUPABASE_ANON_KEY'] ?? '';
     const supabase = createClient(url, key);
     
     useEffect(() => {

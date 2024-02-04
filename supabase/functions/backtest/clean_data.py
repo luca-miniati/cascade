@@ -6,4 +6,4 @@ if not os.path.exists('data/raw'):
     raise FileNotFoundError('`data/raw` not found.')
 
 fns = glob.glob('data/raw/*.csv')
-print(fns)
+dfs = [pd.read_csv(fn) for fn in fns]
