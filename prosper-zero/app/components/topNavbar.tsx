@@ -1,9 +1,9 @@
 'use client';
 
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import Logo from './logo';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface navbarProps {
     navbarIndex: number;
@@ -11,11 +11,13 @@ interface navbarProps {
 
 const Navbar: FC<navbarProps> = ({ navbarIndex }) => {
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const generateRandomState = () => {
         const randomBytes = new Uint8Array(32);
         crypto.getRandomValues(randomBytes);
         const state = Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+        sessionStorage.setItem('state', state);
         return state;
     };
 
@@ -24,8 +26,25 @@ const Navbar: FC<navbarProps> = ({ navbarIndex }) => {
         const clientId = process.env.NEXT_PUBLIC_PROSPER_ID ?? '';
         console.log(clientId);
         const url = `https://www.prosper.com/oauth?client_id=${clientId}&response_type=auth_key&state=${state}`;
-        router.push(url);
+        window.location.href = url;
     }
+
+    useEffect(() => {
+        const authKey = searchParams.get('auth_key');
+        const returnedState = searchParams.get('state');
+
+        if (authKey && returnedState) {
+            const storedState = localStorage.getItem('state');
+            if (returnedState !== storedState) {
+                return;
+            }
+
+            // Need to upsert auth key here
+            console.log('Received auth key:', authKey);
+
+            router.push('/dashboard');
+        }
+    }, []);
 
     return (
         <nav className="flex bg-black bg-opacity-30 justify-between items-center">

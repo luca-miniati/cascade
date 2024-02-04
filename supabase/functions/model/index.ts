@@ -24,7 +24,7 @@ export class ProsperZero {
 
     getListingValuation(listing: Listing): number {
         switch (this.optimizationType) {
-            case OptimizationType.MAX_INTEREST: {
+            case OptimizationType.MAX_TOTAL_INTEREST: {
                 return (listing.lenderYield -
                         listing.lenderYield * DEFAULT_PROBS[listing.prosperRating]) * listing.term;
             }

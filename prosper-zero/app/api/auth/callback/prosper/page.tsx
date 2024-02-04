@@ -8,9 +8,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 const CallbackPage = () => {
     const router =  useRouter();
     const searchParams = useSearchParams();
-    // const url = process.env['SUPABASE_URL'];
-    // const key = process.env['SUPABASE_ANON_KEY'];
-    // const supabase = createClient(url, key);
+    console.log(searchParams);
+    const url = process.env['SUPABASE_URL'];
+    const key = process.env['SUPABASE_ANON_KEY'];
+    const supabase = createClient(url, key);
     
     useEffect(() => {
         const authKey = searchParams.get('auth_key');
@@ -20,6 +21,9 @@ const CallbackPage = () => {
             if (scope != 'read_listing read_loan read_note write_invest_order write_prosper_account write_user_profile') {
                 console.log('access not given');
             }
+        } else {
+            
+            // const { data, error } = supabase.auth.signUp(user);
         }
 
         // const { error } = await supabase

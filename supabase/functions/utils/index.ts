@@ -10,7 +10,7 @@ export const DEFAULT_PROBS = {
 
 export enum OptimizationType {
     DEFAULT,
-    MAX_INTEREST,
+    MAX_TOTAL_INTEREST,
     MAX_CASH_FLOW,
 }
 

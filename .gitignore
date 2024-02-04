@@ -1,5 +1,6 @@
 prosper-zero/app/data/clean
 prosper-zero/app/data/raw
+supabase/functions/backtest/data
 __pycache__
 .DS_Store
 .env
