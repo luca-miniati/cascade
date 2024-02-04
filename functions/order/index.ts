@@ -1,8 +1,5 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js";
-
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+// import { optimize } from '../optimize/index.ts';
 
 console.log("Hello from Functions!")
 
@@ -10,7 +7,7 @@ console.log("Hello from Functions!")
     ProsperZero Order Function
     --------------------------
 
-    What does it do?
+    What it do?
         * Makes orders for each user at some time each morning
     
     How?
@@ -19,38 +16,51 @@ console.log("Hello from Functions!")
         * Fulfill orders
         * It's that simple
 */
-async function getUsers() {
+
+async function orderNotes() {
     try {
+        // Init Supabase
         const supabase = createClient(
             Deno.env.get('SUPABASE_URL') ?? '',
             Deno.env.get('SUPABASE_ANON_KEY') ?? '',
         );
-
+        
+        // Fetch users
         const { data, error } = await supabase.from('users').select('*');
 
         if (error) {
             throw error;
-        } else {
-            return data;
         }
+
+        // Init promise list
+        const users = data['data'];
+        const optimizePromises = [];
+
+        for (const user in users) {
+            optimizePromises.push(optimize(user));
+        }
+
+        // Optimize all portfolios
+        await Promise.all(optimizePromises);
+
+        return new Response("Orders completed.", { status: 200 });
+
     } catch (error) {
         return new Response(String(error?.message ?? error), { status: 500 });
     }
 }
 
-const data = await getUsers();
-console.log(data);
-// Deno.serve(async (req: Request) => {
-//   const { name } = await req.json()
-//   const data = {
-//     message: `Hello ${name}!`,
-//   };
-//
-//   return new Response(
-//     JSON.stringify(data),
-//     { headers: { "Content-Type": "application/json" } },
-//   );
-// });
+Deno.serve(async (req: Request) => {
+  const { name } = await req.json()
+  const data = {
+    message: `Hello ${name}!`,
+  };
+
+  return new Response(
+    JSON.stringify(data),
+    { headers: { "Content-Type": "application/json" } },
+  );
+});
 
 /* To invoke locally:
 
