@@ -1,7 +1,7 @@
 import os
 import glob
 import pandas as pd
-import tqdm
+from tqdm import tqdm
 
 if not os.path.exists('data/raw'):
     raise FileNotFoundError('`.data/raw` not found. Place all `.csv` files in'
