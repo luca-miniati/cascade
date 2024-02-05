@@ -82,7 +82,6 @@ export class Loan {
         * lenderYield: number
         * term: number
         * loanStatus: string
-        * principalPaid: number
         * amountBorrowed: number
         * originationDate: Date
         * prosperRating: string
@@ -93,19 +92,17 @@ export class Listing {
     lenderYield: number;
     term: number;
     loanStatus: string;
-    principalPaid: number;
     amountBorrowed: number;
     originationDate: Date;
     prosperRating: string;
 
     constructor(id: string, lenderYield: number, term: number, loanStatus:string,
-                principalPaid: number, amountBorrowed: number, originationDate: Date,
+                amountBorrowed: number, originationDate: Date,
                 prosperRating: string) {
                     this.id = id;
                     this.lenderYield = lenderYield;
                     this.term = term;
                     this.loanStatus = loanStatus;
-                    this.principalPaid = principalPaid;
                     this.amountBorrowed = amountBorrowed;
                     this.originationDate = originationDate;
                     this.prosperRating = prosperRating;
