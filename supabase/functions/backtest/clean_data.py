@@ -34,11 +34,12 @@ def sort_by_origination_date(df):
     df.sort_values(by='origination_date', axis=0, inplace=True)
 
 
-for fn, df in tqdm(dfs.items()):
+os.makedirs('data/clean', exist_ok=True)
+for fn, df in tqdm(dfs.items(), ascii=True):
     drop_columns(df)
     drop_rows(df)
     sort_by_origination_date(df)
 
     start, end = fn.split('_')[1].split('to')
     start, end = start[:4], end[:4]
-    df.to_csv(f'{start}_{end}')
+    df.to_csv(f'{start}_{end}.csv', index=False)
