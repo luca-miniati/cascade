@@ -42,4 +42,4 @@ for fn, df in tqdm(dfs.items(), ascii=True):
 
     start, end = fn.split('_')[1].split('to')
     start, end = start[:4], end[:4]
-    df.to_csv(f'{start}_{end}.csv', index=False)
+    df.to_csv(f'data/clean/{start}_{end}.csv', index=False)
