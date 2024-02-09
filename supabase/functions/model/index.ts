@@ -77,7 +77,7 @@ export class ProsperZero {
             binaries: listingBinaries,
         }
 
-        const res: Object = glpk.solve(lp);
+        const res: object = glpk.solve(lp);
         const listingsToBuy: Listing[] = [];
         for (let i = 0; i < numListings; i++) {
             const id = listingBinaries[i];
