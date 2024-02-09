@@ -1,6 +1,11 @@
 import { Loan, Listing, OptimizationType, DEFAULT_PROBS } from '../utils/index.ts';
 import GLPK from 'npm:glpk.js';
 
+export interface IModel {
+    portfolio : Loan[];
+    optimize(listings: Listing[], maxAllocation: number): Listing[];
+}
+
 /*
     * ProsperZero
         * FIELDS
@@ -12,7 +17,7 @@ import GLPK from 'npm:glpk.js';
 
 const glpk = GLPK();
 
-export class ProsperZero {
+export class ProsperZero implements IModel{
     portfolio: Loan[];
     optimizationType: OptimizationType;
 
