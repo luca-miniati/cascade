@@ -32,14 +32,6 @@ const SettingsPage: FC = () => {
                             <Filters />
                             <hr className="my-6"/>
                             <p className="font-semibold text-xl mb-6">Notifications</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
-                            <p>l</p>
                         </div>
                     </div>
                 </Background>

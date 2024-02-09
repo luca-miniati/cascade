@@ -10,9 +10,9 @@ const ContactPage: FC = () => {
                 <Navbar navbarIndex={1}/>
                 <div className="flex flex-col grow justify-center items-center">
                     <div className="flex flex-col justify-center items-center w-3/4">
-                        <p className="inline-block text-5xl text-center mb-4">
-                            Please do not try to contact me.
-                        </p>
+                        <Link className="bg-indigo-500 hover:bg-indigo-400 w-fit rounded" href="mailto:prosperzeroinvest@gmail.com">
+                            <p className="p-2 inline">Email us</p>
+                        </Link>
                     </div>
                 </div>
             </Background>

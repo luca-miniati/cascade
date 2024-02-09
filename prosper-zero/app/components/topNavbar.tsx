@@ -50,9 +50,10 @@ const Navbar: FC<navbarProps> = ({ navbarIndex }) => {
         <nav className="flex bg-black bg-opacity-30 justify-between items-center">
             <Logo url={"/"}/>
             <div className="flex space-x-8 items-center p-8">
+                {/*
                 <Link className="w-fit rounded" href="howItWorks">
                     <p className={`p-2 inline ${navbarIndex === 0 ? "text-white" : "text-slate"}-400 hover:text-white text`}>How it works</p>
-                </Link>
+                </Link>*/}
                 <Link className="w-fit rounded" href="contact">
                     <p className={`p-2 inline ${navbarIndex === 1 ? "text-white" : "text-slate"}-400 hover:text-white text`}>Contact</p>
                 </Link>
