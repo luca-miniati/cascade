@@ -18,6 +18,7 @@ import { Listing, Loan, sameDate, laterDate } from '../../utils/index.ts';
 
 export class Investor{
     portfolio: Loan[];
+    portfolioValue: number;
     initialInvestment: number;
     currentCashBalance: number;
     model: IModel;
@@ -26,6 +27,7 @@ export class Investor{
 
     constructor(portfolio: Loan[], initialInvestment: number, currentCashBalance: number, model: IModel, monthlyAllocation: number) {
         this.portfolio = portfolio;
+        this.portfolioValue = 0;
         this.initialInvestment = initialInvestment;
         this.currentCashBalance = currentCashBalance;
         this.model = model;
@@ -52,6 +54,7 @@ export class Investor{
         this.portfolio.push(
             listing.toLoan()
         );
+        this.portfolioValue += 25;
         this.currentCashBalance -= 25;
     }
 
@@ -79,6 +82,7 @@ export class Investor{
         let total = 0;
         for (const loan of this.portfolio) {
             this.currentCashBalance += loan.monthlyPayment;
+            this.portfolioValue -= loan.monthlyPrincipal;
             total += loan.monthlyPayment;
         }
 

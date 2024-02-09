@@ -49,6 +49,7 @@ export class Loan {
     originationDate: Date;
     terminationDate: Date;
     monthlyPayment: number;
+    monthlyPrincipal: number;
 
     constructor(id: string, lenderYield: number, term: number, loanStatus:string, principalPaid: number, amountBorrowed: number, originationDate: Date) {
         this.id = id;
@@ -60,6 +61,7 @@ export class Loan {
         this.originationDate = originationDate;
         this.terminationDate = this.computeTerminationDate();
         this.monthlyPayment = this.computeMonthlyPayment();
+        this.monthlyPrincipal = this.computeMonthlyPrincipal();
     }
 
     computeTerminationDate(): Date {
@@ -87,9 +89,19 @@ export class Loan {
 
     computeMonthlyPayment(): number {
         const r = this.lenderYield / 12;
-        return (25 * r * ((1 + r) ** this.term)) / (((1 + r) ** this.term));
+        return (25 * r * ((1 + r) ** this.term)) / (((1 + r) ** this.term) - 1);
+    }
+
+    computeMonthlyPrincipal(): number {
+        const r = this.lenderYield / 12;
+        return this.monthlyPayment - (25 * r);
     }
 }
+
+
+// const l: Loan = new Loan('0', 0.05, 36, 'COMPLETED', 10000, 10000, new Date());
+// console.log(l.monthlyPayment);
+// console.log(l.monthlyPrincipal);
 
 /*
     * Listing

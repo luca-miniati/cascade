@@ -32,8 +32,8 @@ class Backtest {
                 investor.callModel(listings, currentDate, endDate);
                 console.log('\n');
                 console.log(`Cash Balance: $${investor.currentCashBalance.toFixed(2)}`);
-                console.log(`Value of Notes: $${(investor.portfolio.length * 25).toFixed(2)}`);
-                console.log(`Total Portfolio Value: $${(investor.portfolio.length * 25 + investor.currentCashBalance).toFixed(2)}`);
+                console.log(`Value of Notes: $${(investor.portfolioValue).toFixed(2)}`);
+                console.log(`Total Portfolio Value: $${(investor.portfolioValue + investor.currentCashBalance).toFixed(2)}`);
                 console.log('+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n');
             }
             currentDate.setDate(currentDate.getDate() + 1);

@@ -89,7 +89,7 @@ export class Dataset {
                         const principalPaid: number = parseFloat(row['principal_paid']['$data']);
                         const listing = new Listing(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
                         listings.push(listing);
-                    } elif (found) {
+                    } else if (found) {
                         return listings;
                     }
                 }
