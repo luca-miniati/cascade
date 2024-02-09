@@ -22,7 +22,7 @@ export class ProsperZero implements IModel{
     portfolio: Loan[];
     optimizationType: OptimizationType;
 
-    constructor(portfolio: Loan[], optimizationType: OptimizationType=OptimizationType.DEFAULT) {
+    constructor(portfolio: Loan[], optimizationType: OptimizationType=OptimizationType.MAX_CASH_FLOW) {
         this.portfolio = portfolio;
         this.optimizationType = optimizationType;
     }
@@ -37,9 +37,8 @@ export class ProsperZero implements IModel{
 
             case OptimizationType.MAX_CASH_FLOW: {
                 // Monthly payment
-                return listing.lenderYield -
-                    // @ts-ignore: Suppress errors related to implicitly having 'any' type
-                    listing.lenderYield * DEFAULT_PROBS[listing.prosperRating];
+                // @ts-ignore: Suppress errors related to implicitly having 'any' type
+                return listing.lenderYield - DEFAULT_PROBS[listing.prosperRating];
             }
 
             default: {

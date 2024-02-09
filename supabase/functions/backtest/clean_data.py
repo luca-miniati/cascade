@@ -22,23 +22,23 @@ listing_columns = {
 }
 
 
-def drop_columns(df):
-    df.drop(set(df.columns) - listing_columns, axis=1, inplace=True)
-
-
 def drop_rows(df):
-    df.dropna()
+    mask = (df['loan_status_description'] == 'COMPLETED') | (df['loan_status_description'] == 'DEFAULTED')
+    df = df.dropna()
+    df = df.loc[mask]
+    return df
 
 
 def sort_by_origination_date(df):
-    df.sort_values(by='origination_date', axis=0, inplace=True)
+    df = df.sort_values(by='origination_date', axis=0)
+    return df
 
 
 os.makedirs('data/clean', exist_ok=True)
 for fn, df in tqdm(dfs.items(), ascii=True):
-    drop_columns(df)
-    drop_rows(df)
-    sort_by_origination_date(df)
+    df.drop(set(df.columns) - listing_columns, axis=1)
+    df = drop_rows(df)
+    df = sort_by_origination_date(df)
 
     start, end = fn.split('_')[1].split('to')
     start, end = start[:4], end[:4]

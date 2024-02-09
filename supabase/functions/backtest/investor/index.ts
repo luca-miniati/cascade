@@ -70,23 +70,33 @@ export class Investor{
     }
 
     updateNotes(currentDate: Date): void {
-        const numLoans = this.portfolio.length;
-        this.portfolio = this.portfolio.filter(
-            (loan) => (!sameDate(loan.terminationDate, currentDate))
-        );
+        let numTerminated = 0;
+        let currentPortfolioValue = 0;
+        const currentNotes = [];
+        for (const loan of this.portfolio) {
+            if (laterDate(loan.terminationDate, currentDate)) {
+                currentNotes.push(loan);
+                currentPortfolioValue += loan.principalActive;
+            } else {
+                numTerminated += 1;
+                console.log(loan.prosperRating);
+            }
+        }
 
-        console.log(`${numLoans - this.portfolio.length} notes terminated.`);
+        this.portfolioValue = currentPortfolioValue;
+        this.portfolio = currentNotes;
+
+        console.log(`${numTerminated} notes terminated.`);
     }
 
     collectPayment(): void {
         let total = 0;
         for (const loan of this.portfolio) {
             this.currentCashBalance += loan.monthlyPayment;
-            this.portfolioValue -= loan.monthlyPrincipal;
+            loan.principalActive -= loan.monthlyPrincipal;
             total += loan.monthlyPayment;
         }
 
         console.log(`Collected $${total.toFixed(2)}.`)
-        console.log(`New cash balance: $${this.currentCashBalance.toFixed(2)}.`)
     }
 }

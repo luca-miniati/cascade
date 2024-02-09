@@ -28,6 +28,7 @@ class Backtest {
                 if (currentDate.getDate() == 1) {
                     investor.setAllocation(currentDate);
                     investor.collectPayment();
+                    investor.updateNotes(currentDate);
                 }
                 investor.callModel(listings, currentDate, endDate);
                 console.log('\n');
