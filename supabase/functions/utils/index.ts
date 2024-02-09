@@ -16,17 +16,17 @@ export enum OptimizationType {
 
 /*
     * Loan
-        * FIELDS
-        * id: string
-        * lenderYield: number
-        * term: number
-        * loanStatus: string
-        * principalPaid: number
-        * amountBorrowed: number
-        * originationDate: Date
-        * terminationDate: number
-        * METHODS
-        * computeTerminationDate: Date
+* FIELDS
+* id: string
+* lenderYield: number
+* term: number
+* loanStatus: string
+* principalPaid: number
+* amountBorrowed: number
+* originationDate: Date
+* terminationDate: number
+* METHODS
+* computeTerminationDate: Date
 */
 
 export class Loan {
@@ -38,18 +38,19 @@ export class Loan {
     amountBorrowed: number;
     originationDate: Date;
     terminationDate: Date;
+    monthlyPayment: number;
 
-    constructor(id: string, lenderYield: number, term: number, loanStatus:string,
-                principalPaid: number, amountBorrowed: number, originationDate: Date) {
-                    this.id = id;
-                    this.lenderYield = lenderYield;
-                    this.term = term;
-                    this.loanStatus = loanStatus;
-                    this.principalPaid = principalPaid;
-                    this.amountBorrowed = amountBorrowed;
-                    this.originationDate = originationDate;
-                    this.terminationDate = this.computeTerminationDate();
-                }
+    constructor(id: string, lenderYield: number, term: number, loanStatus:string, principalPaid: number, amountBorrowed: number, originationDate: Date) {
+        this.id = id;
+        this.lenderYield = lenderYield;
+        this.term = term;
+        this.loanStatus = loanStatus;
+        this.principalPaid = principalPaid;
+        this.amountBorrowed = amountBorrowed;
+        this.originationDate = originationDate;
+        this.terminationDate = this.computeTerminationDate();
+        this.monthlyPayment = this.computeMonthlyPayment();
+    }
 
     computeTerminationDate(): Date {
         let numPayments: number;
@@ -73,18 +74,23 @@ export class Loan {
 
         return terminationDate;
     }
+
+    computeMonthlyPayment(): number {
+        const r = this.lenderYield / 12;
+        return (25 * r * ((1 + r) ** this.term)) / (((1 + r) ** this.term));
+    }
 }
 
 /*
     * Listing
-        * FIELDS
-        * id: string
-        * lenderYield: number
-        * term: number
-        * loanStatus: string
-        * amountBorrowed: number
-        * originationDate: Date
-        * prosperRating: string
+* FIELDS
+* id: string
+* lenderYield: number
+* term: number
+* loanStatus: string
+* amountBorrowed: number
+* originationDate: Date
+* prosperRating: string
 */
 
 export class Listing {
@@ -92,23 +98,35 @@ export class Listing {
     lenderYield: number;
     term: number;
     loanStatus: string;
+    principalPaid: number;
     amountBorrowed: number;
     originationDate: Date;
     prosperRating: string;
 
-    constructor(id: string, lenderYield: number, term: number, loanStatus:string,
-                amountBorrowed: number, originationDate: Date,
-                prosperRating: string) {
-                    this.id = id;
-                    this.lenderYield = lenderYield;
-                    this.term = term;
-                    this.loanStatus = loanStatus;
-                    this.amountBorrowed = amountBorrowed;
-                    this.originationDate = originationDate;
-                    this.prosperRating = prosperRating;
-                }
+    constructor(id: string, lenderYield: number, term: number, loanStatus: string, principalPaid: number, amountBorrowed: number, originationDate: Date, prosperRating: string) {
+        this.id = id;
+        this.lenderYield = lenderYield;
+        this.term = term;
+        this.loanStatus = loanStatus;
+        this.principalPaid = principalPaid;
+        this.amountBorrowed = amountBorrowed;
+        this.originationDate = originationDate;
+        this.prosperRating = prosperRating;
+    }
 
     isDefaulted() {
         return this.loanStatus == 'DEFAULTED';
+    }
+
+    toLoan() {
+        return new Loan(
+            this.id,
+            this.lenderYield,
+            this.term,
+            this.loanStatus,
+            this.principalPaid,
+            this.amountBorrowed,
+            this.originationDate,
+        );
     }
 }
