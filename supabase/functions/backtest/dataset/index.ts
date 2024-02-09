@@ -74,10 +74,12 @@ export class Dataset {
             const firstYear = yearRange[0];
             if (currentDate.getFullYear() == firstYear) {
                 const dataFrame = this.data[key];
+                let found = false;
                 for (let i = 0; i < dataFrame.shape[0]; i++) {
                     const row = dataFrame.iloc({ rows: [i] });
                     const originationDate: Date = new Date(row['origination_date']['$data']);
                     if (sameDate(currentDate, originationDate)) {
+                        found = true;
                         const id: string = row['loan_number']['$data'][0].toString();
                         const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
                         const term: number = parseInt(row['term']['$data']);
@@ -87,6 +89,8 @@ export class Dataset {
                         const principalPaid: number = parseFloat(row['principal_paid']['$data']);
                         const listing = new Listing(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
                         listings.push(listing);
+                    } elif (found) {
+                        return listings;
                     }
                 }
             }
