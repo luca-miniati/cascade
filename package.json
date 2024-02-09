@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.17.0",
     "csv-parse": "^5.5.3",
     "debug": "^4.3.4",
     "dotenv": "^16.4.1",
