@@ -53,7 +53,6 @@ export class Dataset {
                 loadingPromises.push(
                     (async () => {
                         this.data[fileObject.name.split('.')[0]] = await dfd.readCSV(fileObject.path);
-                        console.log(`Added ${fileObject.name}`);
                     })()
                 );
                 console.log(`Added ${fileObject.name}`);
@@ -64,25 +63,30 @@ export class Dataset {
         console.log('All files loaded.');
     }
 
+    sameDay(a: Date, b: Date): boolean {
+        return a.getFullYear() === b.getFullYear() &&
+            a.getMonth() === b.getMonth() &&
+            a.getDate() === b.getDate();
+    }
+
     getDay(currentDay: Date): Listing[] {
         const listings: Listing[] = [];
 
         for (const key in this.data) {
-            console.log(`Checking key: ${key}`);
             const yearRange = key.split('_').map(Number);
             const firstYear = yearRange[0];
-            if (currentDay.getFullYear() === firstYear) {
+            if (currentDay.getFullYear() == firstYear) {
                 const dataFrame = this.data[key];
                 for (let i = 0; i < dataFrame.shape[0]; i++) {
-                    const row = dataFrame.iloc({ rows: i, columns: "*" });
-                    const originationDate: Date = new Date(row.get('origination_date'));
-                    if (currentDay.getTime() === originationDate.getTime()) {
-                        const id: string = row.get('loan_number').toString();
-                        const lenderYield: number = parseFloat(row.get('borrower_rate').toString());
-                        const term: number = parseInt(row.get('term').toString());
-                        const loanStatus: string = row.get('loan_status_description').toString();
-                        const amountBorrowed: number = parseFloat(row.get('amount_borrowed').toString());
-                        const prosperRating: string = row.get('prosper_rating').toString();
+                    const row = dataFrame.iloc({ rows: [i] });
+                    const originationDate: Date = new Date(row['origination_date']['$data']);
+                    if (this.sameDay(currentDay, originationDate)) {
+                        const id: string = row['loan_number']['$data'];
+                        const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
+                        const term: number = parseInt(row['term']['$data']);
+                        const loanStatus: string = row['loan_status_description']['$data'];
+                        const amountBorrowed: number = parseFloat(row['amount_borrowed']['$data']);
+                        const prosperRating: string = row['prosper_rating']['$data'];
                         const listing = new Listing(id, lenderYield, term, loanStatus, amountBorrowed, originationDate, prosperRating);
                         listings.push(listing);
                     }
@@ -93,7 +97,3 @@ export class Dataset {
         return listings;
     }
 }
-
-const dataset = new Dataset(new Date(2005, 0, 1), new Date());
-await dataset.initializeData();
-console.log(dataset.getDay(new Date(2005, 5, 14)));
