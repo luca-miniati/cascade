@@ -1,6 +1,7 @@
 import Background from '../components/background';
 import Navbar from '../components/topNavbar';
 import React, { FC } from 'react';
+import Link from 'next/link';
 
 const ContactPage: FC = () => {
     const backgroundImageUrl = '/gradients/02.png';
