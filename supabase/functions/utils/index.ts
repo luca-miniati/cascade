@@ -14,10 +14,14 @@ export enum OptimizationType {
     MAX_CASH_FLOW,
 }
 
-export function sameDay(a: Date, b: Date): boolean {
+export function sameDate(a: Date, b: Date): boolean {
     return a.getFullYear() === b.getFullYear() &&
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate();
+}
+
+export function laterDate(a: Date, b: Date): boolean {
+    return a.getTime() > b.getTime();
 }
 
 /*
@@ -107,6 +111,7 @@ export class Listing {
     principalPaid: number;
     amountBorrowed: number;
     originationDate: Date;
+    terminationDate: Date;
     prosperRating: string;
 
     constructor(id: string, lenderYield: number, term: number, loanStatus: string, principalPaid: number, amountBorrowed: number, originationDate: Date, prosperRating: string) {
@@ -118,6 +123,30 @@ export class Listing {
         this.amountBorrowed = amountBorrowed;
         this.originationDate = originationDate;
         this.prosperRating = prosperRating;
+        this.terminationDate = this.computeTerminationDate();
+    }
+
+    computeTerminationDate(): Date {
+        let numPayments: number;
+        if (this.loanStatus == 'DEFAULTED') {
+            const monthlyPayment = this.amountBorrowed / this.term;
+            const monthlyRate = (this.lenderYield + 1.0) / 12;
+            numPayments = Math.floor(
+                Math.log(monthlyPayment / (monthlyPayment - (this.amountBorrowed * monthlyRate))) /
+                    Math.log(1 + monthlyRate));
+        } else {
+            numPayments = this.term;
+        }
+
+        let terminationMonth = this.originationDate.getMonth() + numPayments;
+        const years = Math.floor(terminationMonth / 12);
+        terminationMonth %= 12;
+
+        const terminationDate = new Date(this.originationDate);
+        terminationDate.setMonth(terminationMonth)
+        terminationDate.setFullYear(this.originationDate.getFullYear() + years);
+
+        return terminationDate;
     }
 
     isDefaulted() {

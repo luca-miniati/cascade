@@ -22,7 +22,8 @@ Deno.test('Test Dataset.getDay', async () => {
         const loanStatus: string = row['loan_status_description']['$data'];
         const amountBorrowed: number = parseFloat(row['amount_borrowed']['$data']);
         const prosperRating: string = row['prosper_rating']['$data'];
-        const listing: Listing = new Listing(id, lenderYield, term, loanStatus, amountBorrowed, originationDate, prosperRating);
+        const principalPaid: number = parseFloat(row['principal_paid']['$data']);
+        const listing: Listing = new Listing(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
         manualListings.push(listing);
     }
 

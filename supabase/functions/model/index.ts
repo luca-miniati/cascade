@@ -101,14 +101,14 @@ export class ProsperZero implements IModel{
 }
 
 // const listings = [
-//     new Listing('0', 0.1775, 'C', 4, 'COMPLETED', 10000.0),
-//     new Listing('1', 0.2384, 'E', 4, 'COMPLETED', 10000.0),
-//     new Listing('2', 0.2254, 'D', 3, 'COMPLETED', 10000.0),
-//     new Listing('3', 0.1205, 'B', 3, 'COMPLETED', 10000.0),
-//     new Listing('4', 0.2033, 'C', 5, 'COMPLETED', 10000.0),
-//     new Listing('5', 0.1511, 'B', 3, 'COMPLETED', 10000.0),
-//     new Listing('6', 0.1961, 'C', 3, 'COMPLETED', 10000.0),
-//     new Listing('7', 0.1745, 'C', 2, 'COMPLETED', 10000.0),
+//     new Listing('0', 0.1775, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'C'),
+//     new Listing('1', 0.2384, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'E'),
+//     new Listing('2', 0.2254, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'D'),
+//     new Listing('3', 0.1205, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'B'),
+//     new Listing('4', 0.2033, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'C'),
+//     new Listing('5', 0.1511, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'B'),
+//     new Listing('6', 0.1961, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'C'),
+//     new Listing('7', 0.1745, 36, 'COMPLETED', 10000.0, 10000.0, new Date(), 'C'),
 // ];
 //
 // const model = new ProsperZero([], OptimizationType.MAX_CASH_FLOW);

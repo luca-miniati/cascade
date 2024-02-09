@@ -1,6 +1,6 @@
 import { expandGlob } from 'https://deno.land/std@0.214.0/fs/expand_glob.ts';
 import * as dfd from 'npm:danfojs-node';
-import { Listing, sameDay } from '../../utils/index.ts';
+import { Listing, sameDate } from '../../utils/index.ts';
 
 /*
     * Dataset
@@ -63,22 +63,22 @@ export class Dataset {
         }
 
         await Promise.all(loadingPromises);
-        console.log('All files loaded.');
+        console.log('All files loaded.\n');
     }
 
-    getDay(currentDay: Date): Listing[] {
+    getData(currentDate: Date): Listing[] {
         const listings: Listing[] = [];
 
         for (const key in this.data) {
             const yearRange = key.split('_').map(Number);
             const firstYear = yearRange[0];
-            if (currentDay.getFullYear() == firstYear) {
+            if (currentDate.getFullYear() == firstYear) {
                 const dataFrame = this.data[key];
                 for (let i = 0; i < dataFrame.shape[0]; i++) {
                     const row = dataFrame.iloc({ rows: [i] });
                     const originationDate: Date = new Date(row['origination_date']['$data']);
-                    if (sameDay(currentDay, originationDate)) {
-                        const id: string = row['loan_number']['$data'];
+                    if (sameDate(currentDate, originationDate)) {
+                        const id: string = row['loan_number']['$data'][0].toString();
                         const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
                         const term: number = parseInt(row['term']['$data']);
                         const loanStatus: string = row['loan_status_description']['$data'];

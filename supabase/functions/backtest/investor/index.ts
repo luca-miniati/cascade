@@ -1,5 +1,5 @@
 import { IModel } from '../../model/index.ts';
-import { Listing, Loan, OptimizationType, sameDay } from '../../utils/index.ts';
+import { Listing, Loan, sameDate, laterDate } from '../../utils/index.ts';
 
 /*
     * Investor
@@ -33,14 +33,14 @@ export class Investor{
         this.dailyAllocation = [];
     }
 
-    setAllocation(currentDay: Date): void {
-        const daysInMonth = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, 0).getDate();
+    setAllocation(currentDate: Date): void {
+        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
         let remainingAllocation = this.monthlyAllocation * this.currentCashBalance;
         const dailyAllocation = Array(daysInMonth).fill(0);
 
         let day = 0;
         while (remainingAllocation >= 25) {
-            dailyAllocation[day % daysInMonth] += 1
+            dailyAllocation[day % daysInMonth] += 25
             remainingAllocation -= 25;
             day += 1
         }
@@ -55,22 +55,34 @@ export class Investor{
         this.currentCashBalance -= 25;
     }
 
-    callModel(listings: Listing[], currentDay: Date): void {
-        const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDay.getDay() - 1]);
+    callModel(listings: Listing[], currentDate: Date, endDate: Date): void {
+        const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDate.getDate() - 1]);
         for (const listing of listingsToBuy) {
-            this.purchaseListing(listing);
+            if (laterDate(endDate, listing.terminationDate)) {
+                this.purchaseListing(listing);
+            }
         }
+
+        console.log(`Purchased ${listingsToBuy.length} notes.`);
     }
 
-    updateNotes(currentDay: Date): void {
-        this.portfolio = this.portfolio.filter(loan => {
-            !sameDay(loan.terminationDate, currentDay) 
-        });
+    updateNotes(currentDate: Date): void {
+        const numLoans = this.portfolio.length;
+        this.portfolio = this.portfolio.filter(
+            (loan) => (!sameDate(loan.terminationDate, currentDate))
+        );
+
+        console.log(`${numLoans - this.portfolio.length} notes terminated.`);
     }
 
-    collectPayment(currentDay: Date): void {
+    collectPayment(): void {
+        let total = 0;
         for (const loan of this.portfolio) {
             this.currentCashBalance += loan.monthlyPayment;
+            total += loan.monthlyPayment;
         }
+
+        console.log(`Collected $${total.toFixed(2)}.`)
+        console.log(`New cash balance: $${this.currentCashBalance.toFixed(2)}.`)
     }
 }
