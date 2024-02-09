@@ -18,11 +18,14 @@ import { Listing } from '../../utils/index.ts';
 export class Dataset {
     startDate: Date;
     endDate: Date;
-    data: { [key: string] : dfd.DataFrame } = {};
+    datasetPath: string;
+    data: { [filename: string]: dfd.DataFrame };
 
-    constructor(startDate: Date, endDate: Date) {
+    constructor(startDate: Date, endDate: Date, datasetPath: string) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.datasetPath = datasetPath;
+        this.data = {};
     }
 
     async initializeData() {
@@ -32,7 +35,7 @@ export class Dataset {
             path: string,
             name: string,
         }[] = [];
-        for await (const entry of expandGlob('./data/clean/*.csv')) {
+        for await (const entry of expandGlob(this.datasetPath + '/*.csv')) {
             fileObjects.push(entry);
         }
         fileObjects.sort();
@@ -52,7 +55,7 @@ export class Dataset {
             if (fileStartDate <= this.endDate && fileEndDate >= this.startDate) {
                 loadingPromises.push(
                     (async () => {
-                        this.data[fileObject.name.split('.')[0]] = await dfd.readCSV(fileObject.path);
+                        this.data[fileObject.name.split('.')[0]] = await dfd.readCSV(fileObject.path) as dfd.DataFrame;
                     })()
                 );
                 console.log(`Added ${fileObject.name}`);
