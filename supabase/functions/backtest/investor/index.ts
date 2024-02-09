@@ -1,5 +1,5 @@
 import { IModel } from '../../model/index.ts';
-import { Listing, Loan, OptimizationType, DEFAULT_PROBS } from '../../utils/index.ts';
+import { Listing, Loan, OptimizationType, sameDay } from '../../utils/index.ts';
 
 /*
     * Investor
@@ -59,6 +59,18 @@ export class Investor{
         const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDay.getDay() - 1]);
         for (const listing of listingsToBuy) {
             this.purchaseListing(listing);
+        }
+    }
+
+    updateNotes(currentDay: Date): void {
+        this.portfolio = this.portfolio.filter(loan => {
+            !sameDay(loan.terminationDate, currentDay) 
+        });
+    }
+
+    collectPayment(currentDay: Date): void {
+        for (const loan of this.portfolio) {
+            this.currentCashBalance += loan.monthlyPayment;
         }
     }
 }

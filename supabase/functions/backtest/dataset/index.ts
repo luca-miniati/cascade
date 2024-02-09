@@ -1,18 +1,18 @@
 import { expandGlob } from 'https://deno.land/std@0.214.0/fs/expand_glob.ts';
 import * as dfd from 'npm:danfojs-node';
-import { Listing } from '../../utils/index.ts';
+import { Listing, sameDay } from '../../utils/index.ts';
 
 /*
     * Dataset
-    * FIELDS
-    * startDate: Date
-        * Starting date of the backtest
-    * endDate: Date
-        * Ending date of the backtest
-    * data: DataFrame
-    * METHODS
-    * initalizeData
-    * get: Date -> DataFrame
+* FIELDS
+* startDate: Date
+* Starting date of the backtest
+* endDate: Date
+* Ending date of the backtest
+* data: DataFrame
+* METHODS
+* initalizeData
+* get: Date -> DataFrame
 */
 
 export class Dataset {
@@ -66,12 +66,6 @@ export class Dataset {
         console.log('All files loaded.');
     }
 
-    sameDay(a: Date, b: Date): boolean {
-        return a.getFullYear() === b.getFullYear() &&
-            a.getMonth() === b.getMonth() &&
-            a.getDate() === b.getDate();
-    }
-
     getDay(currentDay: Date): Listing[] {
         const listings: Listing[] = [];
 
@@ -83,14 +77,15 @@ export class Dataset {
                 for (let i = 0; i < dataFrame.shape[0]; i++) {
                     const row = dataFrame.iloc({ rows: [i] });
                     const originationDate: Date = new Date(row['origination_date']['$data']);
-                    if (this.sameDay(currentDay, originationDate)) {
+                    if (sameDay(currentDay, originationDate)) {
                         const id: string = row['loan_number']['$data'];
                         const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
                         const term: number = parseInt(row['term']['$data']);
                         const loanStatus: string = row['loan_status_description']['$data'];
                         const amountBorrowed: number = parseFloat(row['amount_borrowed']['$data']);
                         const prosperRating: string = row['prosper_rating']['$data'];
-                        const listing = new Listing(id, lenderYield, term, loanStatus, amountBorrowed, originationDate, prosperRating);
+                        const principalPaid: number = parseFloat(row['principal_paid']['$data']);
+                        const listing = new Listing(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
                         listings.push(listing);
                     }
                 }

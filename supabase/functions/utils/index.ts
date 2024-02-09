@@ -14,6 +14,12 @@ export enum OptimizationType {
     MAX_CASH_FLOW,
 }
 
+export function sameDay(a: Date, b: Date): boolean {
+    return a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
+}
+
 /*
     * Loan
 * FIELDS
