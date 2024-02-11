@@ -32,20 +32,18 @@ export class ProsperZero implements IModel{
             case OptimizationType.MAX_TOTAL_INTEREST: {
                 return (listing.lenderYield -
                         // @ts-ignore: Suppress errors related to implicitly having 'any' type
-                        listing.lenderYield * DEFAULT_PROBS[listing.prosperRating]) * listing.term;
+                        DEFAULT_PROBS[listing.prosperRating]) * listing.term;
             }
 
             case OptimizationType.MAX_CASH_FLOW: {
-                // Monthly payment
                 // @ts-ignore: Suppress errors related to implicitly having 'any' type
                 return listing.lenderYield - DEFAULT_PROBS[listing.prosperRating];
             }
 
             default: {
                 // add coefficients
-                return listing.lenderYield -
-                    // @ts-ignore: Suppress errors related to implicitly having 'any' type
-                    listing.lenderYield * DEFAULT_PROBS[listing.prosperRating];
+                // @ts-ignore: Suppress errors related to implicitly having 'any' type
+                return listing.lenderYield - DEFAULT_PROBS[listing.prosperRating];
             }
         }
     }
