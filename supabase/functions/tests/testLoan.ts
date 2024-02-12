@@ -12,13 +12,19 @@ Deno.test('Test Loan.computeTerminationDate', () => {
 });
 
 Deno.test('Test Loan.monthlyPayment', () => {
-    const l1: Loan = new Loan('0', 0.05, 36, 'DEFAULTED', 5000, 10000, new Date(), 'A');
-    const l2: Loan = new Loan('0', 0.05, 36, 'DEFAULTED', 7500, 10000, new Date(), 'A');
+    const l1: Loan = new Loan('0', 0.05, 36, 'DEFAULTED', 5000, 10000, new Date(2000, 0, 1), 'A');
+    const l2: Loan = new Loan('0', 0.15, 24, 'DEFAULTED', 7500, 10000, new Date(), 'A');
 
-    console.log(l1.monthlyPayment * l1.term);
-    console.log(l1.monthlyPayment);
-    console.log(l1.monthlyPrincipal);
-    console.log(25 * (1 + l1.lenderYield - 0.01));
-    assert(((l1.monthlyPayment * l1.term) - (l1.amountBorrowed * (1 + l1.lenderYield + 0.01))) < 0.01);
+    assert(l1.monthlyPayment == 0.75);
+    assert(l2.monthlyPayment == 1.21);
 });
 
+Deno.test('Test Loan.amortizationSchedule', () => {
+    const l1: Loan = new Loan('0', 0.05, 36, 'DEFAULTED', 5000, 10000, new Date(), 'A');
+    const l2: Loan = new Loan('0', 0.05, 36, 'DEFAULTED', 7500, 10000, new Date(), 'A');
+    const l1AmortizationSchedule = {
+        [new Date(2000, 1, 1).toString()]: [0.10, 0.65],
+    };
+
+    assert(l1.amortizationSchedule == l1AmortizationSchedule);
+});

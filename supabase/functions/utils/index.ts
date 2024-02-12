@@ -73,12 +73,14 @@ export class Loan extends P2P {
     monthlyPayment: number;
     monthlyPrincipal: number;
     principalActive: number;
+    amortizationSchedule: { [key: string]: [number, number] };
 
     constructor(id: string, lenderYield: number, term: number, loanStatus:string, principalPaid: number, amountBorrowed: number, originationDate: Date, prosperRating: string) {
         super(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
 
         this.monthlyPayment = this.computeMonthlyPayment();
         this.monthlyPrincipal = this.computeMonthlyPrincipal();
+        this.amortizationSchedule = this.computeAmortizationSchedule();
         this.principalActive = 25;
     }
 
@@ -90,6 +92,10 @@ export class Loan extends P2P {
     computeMonthlyPrincipal(): number {
         const r = this.lenderYield / 12;
         return this.monthlyPayment - (25 * r);
+    }
+
+    computeAmortizationSchedule(): { [key: string]: [number, number] }  {
+        
     }
 }
 
