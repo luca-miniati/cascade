@@ -24,78 +24,84 @@ export class Investor{
     model: IModel;
     monthlyAllocation: number;
     dailyAllocation: number[];
+    name: string;
 
-    constructor(portfolio: Loan[], initialInvestment: number, currentCashBalance: number, model: IModel, monthlyAllocation: number) {
-        this.portfolio = portfolio;
-        this.portfolioValue = 0;
-        this.initialInvestment = initialInvestment;
-        this.currentCashBalance = currentCashBalance;
-        this.model = model;
-        this.monthlyAllocation = monthlyAllocation;
-        this.dailyAllocation = [];
-    }
+    constructor(portfolio: Loan[], initialInvestment: number, currentCashBalance: number,
+                model: IModel, monthlyAllocation: number, name: string) {
+                    this.portfolio = portfolio;
+                    this.portfolioValue = 0;
+                    this.initialInvestment = initialInvestment;
+                    this.currentCashBalance = currentCashBalance;
+                    this.model = model;
+                    this.monthlyAllocation = monthlyAllocation;
+                    this.dailyAllocation = [];
+                    this.name = name;
+                }
 
-    setAllocation(currentDate: Date): void {
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        let remainingAllocation = this.monthlyAllocation * this.currentCashBalance;
-        const dailyAllocation = Array(daysInMonth).fill(0);
+                setAllocation(currentDate: Date): void {
+                    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+                    let remainingAllocation = this.monthlyAllocation * this.currentCashBalance;
+                    const dailyAllocation = Array(daysInMonth).fill(0);
 
-        let day = 0;
-        while (remainingAllocation >= 25) {
-            dailyAllocation[day % daysInMonth] += 25
-            remainingAllocation -= 25;
-            day += 1
-        }
+                    let day = 0;
+                    while (remainingAllocation >= 25) {
+                        dailyAllocation[day % daysInMonth] += 25
+                        remainingAllocation -= 25;
+                        day += 1
+                    }
 
-        this.dailyAllocation = dailyAllocation;
-    }
+                    this.dailyAllocation = dailyAllocation;
+                }
 
-    purchaseListing(listing: Listing): void {
-        this.portfolio.push(
-            listing.toLoan()
-        );
-        this.portfolioValue += 25;
-        this.currentCashBalance -= 25;
-    }
+                purchaseListing(listing: Listing): void {
+                    this.portfolio.push(
+                        listing.toLoan()
+                    );
+                    this.portfolioValue += 25;
+                    this.currentCashBalance -= 25;
+                }
 
-    callModel(listings: Listing[], currentDate: Date, endDate: Date): void {
-        const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDate.getDate() - 1]);
-        for (const listing of listingsToBuy) {
-            if (laterDate(endDate, listing.terminationDate)) {
-                this.purchaseListing(listing);
-            }
-        }
+                callModel(listings: Listing[], currentDate: Date, endDate: Date): number {
+                    const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDate.getDate() - 1]);
+                    for (const listing of listingsToBuy) {
+                        if (laterDate(endDate, listing.terminationDate)) {
+                            this.purchaseListing(listing);
+                        }
+                    }
 
-        console.log(`Purchased ${listingsToBuy.length} notes.`);
-    }
+                    return listingsToBuy.length;
+                }
 
-    updateNotes(currentDate: Date): void {
-        let numTerminated = 0;
-        let currentPortfolioValue = 0;
-        const currentNotes = [];
-        for (const loan of this.portfolio) {
-            if (laterDate(loan.terminationDate, currentDate)) {
-                currentNotes.push(loan);
-                currentPortfolioValue += loan.principalActive;
-            } else {
-                numTerminated += 1;
-            }
-        }
+                updateNotes(currentDate: Date): number {
+                    // there is no principal Active, now it's prinpal balance
+                    let numTerminated = 0;
+                    let currentPortfolioValue = 0;
+                    const currentNotes = [];
+                    for (const loan of this.portfolio) {
+                        if (laterDate(loan.terminationDate, currentDate)) {
+                            currentNotes.push(loan);
+                            currentPortfolioValue += loan.principalBalance;
+                        } else {
+                            numTerminated += 1;
+                        }
+                    }
 
-        this.portfolioValue = currentPortfolioValue;
-        this.portfolio = currentNotes;
+                    this.portfolioValue = currentPortfolioValue;
+                    this.portfolio = currentNotes;
 
-        console.log(`${numTerminated} notes terminated.`);
-    }
+                    return numTerminated;
+                }
 
-    collectPayment(): void {
-        let total = 0;
-        for (const loan of this.portfolio) {
-            this.currentCashBalance += loan.monthlyPayment;
-            loan.principalActive -= loan.monthlyPrincipal;
-            total += loan.monthlyPayment;
-        }
+                collectPayment(currentDate: Date): number {
+                    let amountCollected = 0;
+                    for (const loan of this.portfolio) {
+                        this.currentCashBalance += loan.monthlyPayment;
+                        const principalPayment = loan.amortizationSchedule[currentDate.toDateString()][1];
+                        loan.principalBalance -= principalPayment;
+                        this.portfolioValue -= principalPayment;
+                        amountCollected += loan.monthlyPayment;
+                    }
 
-        console.log(`Collected $${total.toFixed(2)}.`)
-    }
+                    return amountCollected;
+                }
 }

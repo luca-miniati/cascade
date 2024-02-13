@@ -21,7 +21,7 @@ export function sameDate(a: Date, b: Date): boolean {
 }
 
 export function laterDate(a: Date, b: Date): boolean {
-    return a.getTime() > b.getTime();
+    return a.getTime() >= b.getTime();
 }
 
 export function addMonth(a: Date) {
@@ -119,8 +119,8 @@ export class Loan extends P2P {
                     const res: { [key: string]: [number, number] } = {};
 
                     for (let i = 0; i < this.term; i++) {
-                        const interestPayment = parseFloat((principalBalance * this.monthlyRate).toFixed(2));
-                        const principalPayment = parseFloat((this.monthlyPayment - interestPayment).toFixed(2));
+                        const interestPayment = (principalBalance * this.monthlyRate);
+                        const principalPayment = (this.monthlyPayment - interestPayment);
 
                         currentDate = addMonth(currentDate);
                         res[currentDate.toDateString()] = [interestPayment, principalPayment];
