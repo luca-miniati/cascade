@@ -1,5 +1,5 @@
 import { IModel } from '../../model/index.ts';
-import { Listing, Loan, sameDate, laterDate } from '../../utils/index.ts';
+import { Listing, Loan, laterDate } from '../../utils/index.ts';
 
 /*
     * Investor
@@ -79,7 +79,6 @@ export class Investor{
                 currentPortfolioValue += loan.principalActive;
             } else {
                 numTerminated += 1;
-                console.log(loan.prosperRating);
             }
         }
 
