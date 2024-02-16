@@ -28,7 +28,6 @@
     <a href="https://github.com/luca-miniati/prosper-zero"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/luca-miniati/prosper-zero">View Demo</a>
     ·
     <a href="https://github.com/luca-miniati/prosper-zero/issues">Report Bug</a>
     ·
