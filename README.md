@@ -17,7 +17,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/luca-miniati/prosper-zero">
-    <img src="images/logo.png" alt="Logo" width="100" height="100">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">ProsperZero</h3>
