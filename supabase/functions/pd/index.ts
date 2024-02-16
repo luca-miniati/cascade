@@ -1,7 +1,7 @@
 import * as dfd from 'npm:danfojs-node';
 import * as tf from 'npm:@tensorflow/tfjs';
 
-const df = await dfd.readCSV('../backtest/data/clean/2005_2013.csv');
+const df = await dfd.readCSV('../backtest/data/clean/2017_2018.csv');
 
 const le = new dfd.LabelEncoder()
 df['loan_status_description'] = le.fitTransform(df['loan_status_description']);
