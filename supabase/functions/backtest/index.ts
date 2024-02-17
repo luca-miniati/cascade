@@ -10,7 +10,16 @@ class Backtest {
 
     constructor(datasetPath: string) {
         this.datasetPath = datasetPath
-        this.outputPath = "output/" + new Date().toString() + ".txt";
+        const _date = new Date();
+        this.outputPath = "output/" +
+            _date.getFullYear() +
+            "-" +
+            _date.getFullMonth() + 
+            "-" + 
+            _date.getDate() + 
+            "-" + 
+            _date.getTime() +
+            ".txt";
     }
 
     async run(investors: Investor[], startDate: Date, endDate: Date): Promise<void> {

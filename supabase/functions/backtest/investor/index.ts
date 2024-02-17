@@ -73,28 +73,18 @@ export class Investor{
                 }
 
                 updateNotes(currentDate: Date): number {
-                    // there is no principal Active, now it's prinpal balance
                     let numTerminated = 0;
                     let currentPortfolioValue = 0;
                     const currentNotes = [];
-                    let flag = false;
                     for (const loan of this.portfolio) {
                         if (!loan.isTerminated(currentDate)) {
                             currentNotes.push(loan);
                             currentPortfolioValue += loan.principalBalance;
                         } else {
-                            if (loan.id == "614556") {
-                                console.log("He's terminated???");
-                                flag = true;
-                            }
                             numTerminated += 1;
                         }
                     }
 
-                    if (flag) {
-                        console.log("In currentNotes: " + currentNotes.some(loan => loan.id == "614556"));
-                        console.log("In this.portfolio: " + this.portfolio.some(loan => loan.id == "614556"));
-                    }
                     this.portfolioValue = currentPortfolioValue;
                     this.portfolio = currentNotes;
 
@@ -105,22 +95,10 @@ export class Investor{
                     let amountCollected = 0;
                     for (const loan of this.portfolio) {
                         this.currentCashBalance += loan.monthlyPayment;
-                        // const principalPayment = loan.amortizationSchedule[currentDate.toDateString()][1];
+
                         const currentValues = loan.amortizationSchedule[currentDate.toDateString()];
-                        let principalPayment;
-                        if (currentValues) {
-                            principalPayment = currentValues[1];
-                        } else {
-                            console.log("ID: " + loan.id);
-                            console.log("LOAN STATUS: " + loan.loanStatus);
-                            console.log("SCHEDULE: " + loan.amortizationSchedule);
-                            console.log("ORIGINATION: " + loan.originationDate);
-                            console.log("TERMINATION: " + loan.terminationDate);
-                            console.log("TERM: " + loan.term);
-                            throw new Error("Yo what the hell");
-                        }
-                        loan.principalBalance -= principalPayment;
-                        this.portfolioValue -= principalPayment;
+                        loan.principalBalance = currentValues[1];
+
                         amountCollected += loan.monthlyPayment;
                     }
 
