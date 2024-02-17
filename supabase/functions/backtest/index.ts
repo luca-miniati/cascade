@@ -46,7 +46,6 @@ class Backtest {
                 out.push(`Value of Notes: $${(investor.portfolioValue).toFixed(2)}`);
                 out.push(`Total Portfolio Value: $${(investor.portfolioValue + investor.currentCashBalance).toFixed(2)}`);
             }
-            out.push("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n");
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
