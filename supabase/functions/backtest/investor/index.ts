@@ -1,5 +1,5 @@
 import { IModel } from '../../model/index.ts';
-import { Listing, Loan, laterDate } from '../../utils/index.ts';
+import { Listing, Loan } from '../../utils/index.ts';
 
 /*
     * Investor
@@ -64,7 +64,7 @@ export class Investor{
                 callModel(listings: Listing[], currentDate: Date, endDate: Date): number {
                     const listingsToBuy: Listing[] = this.model.optimize(listings, this.dailyAllocation[currentDate.getDate() - 1]);
                     for (const listing of listingsToBuy) {
-                        if (laterDate(endDate, listing.terminationDate)) {
+                        if (endDate.getTime() >= listing.terminationDate.getTime()) {
                             this.purchaseListing(listing);
                         }
                     }
@@ -77,15 +77,23 @@ export class Investor{
                     let numTerminated = 0;
                     let currentPortfolioValue = 0;
                     const currentNotes = [];
+                    let flag = false;
                     for (const loan of this.portfolio) {
-                        if (laterDate(loan.terminationDate, currentDate)) {
+                        if (!loan.isTerminated(currentDate)) {
                             currentNotes.push(loan);
                             currentPortfolioValue += loan.principalBalance;
                         } else {
+                            if (loan.id == "614556") {
+                                console.log("He's terminated???");
+                                flag = true;
+                            }
                             numTerminated += 1;
                         }
                     }
 
+                    if (flag) {
+                        console.log(currentNotes.some(loan => loan.id == "614556"));
+                    }
                     this.portfolioValue = currentPortfolioValue;
                     this.portfolio = currentNotes;
 
@@ -96,7 +104,20 @@ export class Investor{
                     let amountCollected = 0;
                     for (const loan of this.portfolio) {
                         this.currentCashBalance += loan.monthlyPayment;
-                        const principalPayment = loan.amortizationSchedule[currentDate.toDateString()][1];
+                        // const principalPayment = loan.amortizationSchedule[currentDate.toDateString()][1];
+                        const currentValues = loan.amortizationSchedule[currentDate.toDateString()];
+                        let principalPayment;
+                        if (currentValues) {
+                            principalPayment = currentValues[1];
+                        } else {
+                            console.log("ID: " + loan.id);
+                            console.log("LOAN STATUS: " + loan.loanStatus);
+                            console.log("SCHEDULE: " + loan.amortizationSchedule);
+                            console.log("ORIGINATION: " + loan.originationDate);
+                            console.log("TERMINATION: " + loan.terminationDate);
+                            console.log("TERM: " + loan.term);
+                            throw new Error("Yo what the hell");
+                        }
                         loan.principalBalance -= principalPayment;
                         this.portfolioValue -= principalPayment;
                         amountCollected += loan.monthlyPayment;

@@ -20,10 +20,6 @@ export function sameDate(a: Date, b: Date): boolean {
         a.getDate() === b.getDate();
 }
 
-export function laterDate(a: Date, b: Date): boolean {
-    return a.getTime() >= b.getTime();
-}
-
 export function addMonth(a: Date) {
     const currentMonth = a.getMonth();
     const newMonth = currentMonth + 1;
@@ -129,6 +125,10 @@ export class Loan extends P2P {
                     }
 
                     return res;
+                }
+
+                isTerminated(currentDate: Date): boolean {
+                    return currentDate.getTime() >= this.terminationDate.getTime();
                 }
 }
 
