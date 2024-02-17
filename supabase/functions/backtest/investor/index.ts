@@ -92,7 +92,8 @@ export class Investor{
                     }
 
                     if (flag) {
-                        console.log(currentNotes.some(loan => loan.id == "614556"));
+                        console.log("In currentNotes: " + currentNotes.some(loan => loan.id == "614556"));
+                        console.log("In this.portfolio: " + this.portfolio.some(loan => loan.id == "614556"));
                     }
                     this.portfolioValue = currentPortfolioValue;
                     this.portfolio = currentNotes;
