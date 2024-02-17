@@ -58,7 +58,7 @@ const backtest = new Backtest("./data/clean");
 const investors = [
     new Investor([], 10000, 10000, new ProsperZero([]), 1.0, "Default")
 ];
-const startDate = new Date(2016, 0, 1);
+const startDate = new Date(2014, 0, 1);
 const endDate = new Date(2024, 11, 29);
 
 await backtest.run(investors, startDate, endDate);
