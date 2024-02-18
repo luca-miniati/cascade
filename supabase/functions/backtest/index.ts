@@ -3,7 +3,6 @@ import { Investor } from "./investor/index.ts";
 import { sameDate } from "../utils/index.ts";
 import { ProsperZero } from "../model/index.ts";
 
-
 class Backtest {
     datasetPath: string;
     outputPath: string;
@@ -14,7 +13,7 @@ class Backtest {
         this.outputPath = "output/" +
             _date.getFullYear() +
             "-" +
-            _date.getFullMonth() + 
+            _date.getMonth() + 
             "-" + 
             _date.getDate() + 
             "-" + 
@@ -57,7 +56,6 @@ class Backtest {
             }
             currentDate.setDate(currentDate.getDate() + 1);
         }
-
         await Deno.writeTextFile(this.outputPath, out.join("\n"));
     }
 }
