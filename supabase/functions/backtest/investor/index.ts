@@ -57,7 +57,6 @@ export class Investor{
                     this.portfolio.push(
                         listing.toLoan()
                     );
-                    this.portfolioValue += 25;
                     this.currentCashBalance -= 25;
                 }
 
@@ -74,21 +73,28 @@ export class Investor{
 
                 updateNotes(currentDate: Date): number {
                     let numTerminated = 0;
-                    let currentPortfolioValue = 0;
                     const currentNotes = [];
                     for (const loan of this.portfolio) {
                         if (!loan.isTerminated(currentDate)) {
                             currentNotes.push(loan);
-                            currentPortfolioValue += loan.principalBalance;
                         } else {
                             numTerminated += 1;
                         }
                     }
 
-                    this.portfolioValue = currentPortfolioValue;
                     this.portfolio = currentNotes;
+                    this.updatePortfolioValue();
 
                     return numTerminated;
+                }
+
+                updatePortfolioValue(): void {
+                    let portfolioValue = 0;
+                    for (const loan of this.portfolio) {
+                        portfolioValue += loan.principalBalance;
+                    }
+
+                    this.portfolioValue = portfolioValue;
                 }
 
                 collectPayment(currentDate: Date): number {
@@ -97,10 +103,11 @@ export class Investor{
                         this.currentCashBalance += loan.monthlyPayment;
 
                         const currentValues = loan.amortizationSchedule[currentDate.toDateString()];
-                        loan.principalBalance = currentValues[1];
-
-                        amountCollected += loan.monthlyPayment;
+                        loan.principalBalance -= currentValues[1];
+                        amountCollected += currentValues[0];
                     }
+
+                    this.updatePortfolioValue();
 
                     return amountCollected;
                 }

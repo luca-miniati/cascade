@@ -39,7 +39,7 @@ class Backtest {
                 const numTerminated = investor.updateNotes(currentDate);
                 out.push(`${numTerminated} notes terminated.`);
 
-                // If it"s the first of the month
+                // If it's the first of the month
                 if (currentDate.getDate() == 1) {
                     // Reset monthly allocation
                     investor.setAllocation(currentDate);
