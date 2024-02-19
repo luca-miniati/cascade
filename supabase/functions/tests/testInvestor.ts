@@ -1,11 +1,11 @@
-import { assert } from "https://deno.land/std@0.214.0/assert/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.214.0/assert/mod.ts";
 import { Investor } from "../backtest/investor/index.ts";
 import { ProsperZero } from "../model/index.ts";
 
 Deno.test("Test Investor.setAllocatian", () => {
     const investor1 = new Investor(
         [],
-        10000,
+        9999,
         new ProsperZero([]),
         1.0,
         "Investor 1",
@@ -13,10 +13,10 @@ Deno.test("Test Investor.setAllocatian", () => {
     // Set allocation on first of the month
     investor1.setAllocation(new Date(2000, 0, 1));
     const dailyAllocation: number[] = [
-        325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,300,300,300
+        325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,325,300,300,300,300
     ];
 
-    assert(investor1.dailyAllocation == dailyAllocation);
+    assertEquals(investor1.dailyAllocation, dailyAllocation);
 });
 
 // Deno.test("Test Investor.currentAllocation", () => {
