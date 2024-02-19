@@ -5,7 +5,6 @@ import { Listing, Loan } from '../../utils/index.ts';
     * Investor
         * FIELDS
         * this.portfolio : Loan[]
-        * this.initialInvestment: numnber
         * this.currentCashBalance : number
         * this.model : IModel
         * this.monthlyAllocation : number
@@ -19,18 +18,16 @@ import { Listing, Loan } from '../../utils/index.ts';
 export class Investor{
     portfolio: Loan[];
     portfolioValue: number;
-    initialInvestment: number;
     currentCashBalance: number;
     model: IModel;
     monthlyAllocation: number;
     dailyAllocation: number[];
     name: string;
 
-    constructor(portfolio: Loan[], initialInvestment: number, currentCashBalance: number,
+    constructor(portfolio: Loan[], currentCashBalance: number,
                 model: IModel, monthlyAllocation: number, name: string) {
                     this.portfolio = portfolio;
                     this.portfolioValue = 0;
-                    this.initialInvestment = initialInvestment;
                     this.currentCashBalance = currentCashBalance;
                     this.model = model;
                     this.monthlyAllocation = monthlyAllocation;
