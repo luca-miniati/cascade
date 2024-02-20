@@ -6,7 +6,6 @@ Deno.test("Test Investor.currentAllocation", () => {
     const investor1 = new Investor(
         [],
         10000,
-        10000,
         new ProsperZero([]),
         1000,
     );
