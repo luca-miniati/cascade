@@ -3,12 +3,14 @@ import { Loan } from '../utils/index.ts';
 
 Deno.test('Test Loan.computeTerminationDate', () => {
     const loan1 = new Loan('0', 0.0, 1, 'COMPLETED', 69.0, 100.0, new Date(1492, 0, 1), 'B');
-    const loan2 = new Loan('0', 0.0, 12, 'COMPLETED', 69.0, 100.0, new Date(1492, 0, 1), 'B');
-    const loan3 = new Loan('0', 0.0, 12, 'COMPLETED', 69.0, 100.0, new Date(1492, 1, 1), 'B');
+    const loan2 = new Loan('1', 0.0, 12, 'COMPLETED', 69.0, 100.0, new Date(1492, 0, 1), 'B');
+    const loan3 = new Loan('2', 0.0, 12, 'COMPLETED', 69.0, 100.0, new Date(1492, 1, 1), 'B');
+    const loan4 = new Loan('3', 0.25, 60, 'DEFAULTED', 2237.49, 15000, new Date(2013, 0, 2), 'D');
 
     assert(loan1.terminationDate.toDateString() == new Date(1492, 1, 1).toDateString());
     assert(loan2.terminationDate.toDateString() == new Date(1493, 0, 1).toDateString());
-    assert(loan3.terminationDate.toDateString() == new Date(1493, 1, 1).toDateString());
+    assert(loan3.terminationDate.toDateString() == new Date(1493, 1, 1).toDateString());;
+    assert(loan4.terminationDate.toDateString() == new Date(2013, 1, 1).toDateString());;
 });
 
 Deno.test('Test Loan.monthlyPayment', () => {

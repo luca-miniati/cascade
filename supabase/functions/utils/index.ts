@@ -104,19 +104,20 @@ export class Loan extends P2P {
                           originationDate, prosperRating);
 
                           this.monthlyPayment = this.computeMonthlyPayment();
-                          this.amortizationSchedule = this.computeAmortizationSchedule();
+                          this.amortizationSchedule = this.computeAmortizationSchedule(25,
+                                                                            this.monthlyPayment);
                           this.principalBalance = 25;
                 }
 
-                computeAmortizationSchedule(): { [key: string]: [number, number] }  {
+                computeAmortizationSchedule(principalBalance: number, monthlyPayment: number):
+                    { [key: string]: [number, number] }  {
                     let currentDate = firstOfTheMonth(this.originationDate);
 
-                    let principalBalance = 25;
                     const res: { [key: string]: [number, number] } = {};
 
                     for (let i = 0; i < this.term; i++) {
-                        const interestPayment = (principalBalance * this.monthlyRate);
-                        const principalPayment = (this.monthlyPayment - interestPayment);
+                        const interestPayment = (principalBalance * monthlyRate);
+                        const principalPayment = (monthlyPayment - interestPayment);
 
                         currentDate = addMonth(currentDate);
                         res[currentDate.toDateString()] = [interestPayment, principalPayment];

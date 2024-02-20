@@ -1,3 +1,4 @@
+import { assert } from 'https://deno.land/std@0.214.0/assert/mod.ts';
 import { expandGlob } from 'https://deno.land/std@0.214.0/fs/expand_glob.ts';
 import * as dfd from 'npm:danfojs-node';
 import { Listing, sameDate } from '../../utils/index.ts';
@@ -9,6 +10,8 @@ import { Listing, sameDate } from '../../utils/index.ts';
 * Starting date of the backtest
 * endDate: Date
 * Ending date of the backtest
+* rowIndex: number
+* Index in df
 * data: DataFrame
 * METHODS
 * initalizeData
@@ -18,14 +21,18 @@ import { Listing, sameDate } from '../../utils/index.ts';
 export class Dataset {
     startDate: Date;
     endDate: Date;
+    rowIndex: number;
+    dataKey: number;
     datasetPath: string;
-    data: { [filename: string]: dfd.DataFrame };
+    data: dfd.DataFrame;
 
     constructor(startDate: Date, endDate: Date, datasetPath: string) {
         this.startDate = startDate;
+        this.rowIndex = 0;
         this.endDate = endDate;
         this.datasetPath = datasetPath;
         this.data = {};
+        this.dataKey = '';
     }
 
     async initializeData() {
@@ -62,37 +69,32 @@ export class Dataset {
             }
         }
 
-        await Promise.all(loadingPromises);
         console.log('All files loaded.\n');
+        this.data = dfd.concat({ dfList: this.data, axis: 0 });
     }
 
     getData(currentDate: Date): Listing[] {
+        assert(
+            sameDate(currentDate,
+                     new Date(this.data.iloc[this.rowIndex]['origination_date']['$data']))
+        );
+
         const listings: Listing[] = [];
 
-        for (const key in this.data) {
-            const yearRange = key.split('_').map(Number);
-            const firstYear = yearRange[0];
-            if (currentDate.getFullYear() == firstYear) {
-                const dataFrame = this.data[key];
-                let found = false;
-                for (let i = 0; i < dataFrame.shape[0]; i++) {
-                    const row = dataFrame.iloc({ rows: [i] });
-                    const originationDate: Date = new Date(row['origination_date']['$data']);
-                    if (sameDate(currentDate, originationDate)) {
-                        found = true;
-                        const id: string = row['loan_number']['$data'][0].toString();
-                        const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
-                        const term: number = parseInt(row['term']['$data']);
-                        const loanStatus: string = row['loan_status_description']['$data'];
-                        const amountBorrowed: number = parseFloat(row['amount_borrowed']['$data']);
-                        const prosperRating: string = row['prosper_rating']['$data'];
-                        const principalPaid: number = parseFloat(row['principal_paid']['$data']);
-                        const listing = new Listing(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed, originationDate, prosperRating);
-                        listings.push(listing);
-                    } else if (found) {
-                        return listings;
-                    }
-                }
+        for (let i = this.rowIndex; i < this.data.shape[0]; i++) {
+            const row = this.data.iloc({ rows: [i] });
+            const originationDate: Date = new Date(row['origination_date']['$data']);
+            if (sameDate(currentDate, originationDate)) {
+                const id: string = row['loan_number']['$data'][0].toString();
+                const lenderYield: number = parseFloat(row['borrower_rate']['$data']);
+                const term: number = parseInt(row['term']['$data']);
+                const loanStatus: string = row['loan_status_description']['$data'];
+                const amountBorrowed: number = parseFloat(row['amount_borrowed']['$data']);
+                const prosperRating: string = row['prosper_rating']['$data'];
+                const principalPaid: number = parseFloat(row['principal_paid']['$data']);
+                const listing = new Listing(id, lenderYield, term, loanStatus, principalPaid,
+                                            amountBorrowed, originationDate, prosperRating);
+                listings.push(listing);
             }
         }
 
