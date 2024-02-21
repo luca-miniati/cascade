@@ -63,30 +63,68 @@ abstract class P2P {
                     this.terminationDate = this.computeTerminationDate();
                 }
 
-                computeMonthlyPayment(): number {
-                    return 25 * (this.monthlyRate * Math.pow(1 + this.monthlyRate, this.term)) /
+                computeMonthlyPayment(amountBorrowed: number): number {
+                    return amountBorrowed * (this.monthlyRate * Math.pow(1 + this.monthlyRate, this.term)) /
                         (Math.pow(1 + this.monthlyRate, this.term) - 1);
                 }
 
+                computeAmortizationSchedule(principalBalance: number, monthlyPayment: number):
+                    { [key: string]: [number, number] }  {
+                    let currentDate = firstOfTheMonth(this.originationDate);
+
+                    const res: { [key: string]: [number, number] } = {};
+
+                    for (let i = 0; i < this.term; i++) {
+                        const interestPayment = (principalBalance * this.monthlyRate);
+                        const principalPayment = (monthlyPayment - interestPayment);
+
+                        currentDate = addMonth(currentDate);
+                        res[currentDate.toDateString()] = [interestPayment, principalPayment];
+
+                        principalBalance -= principalPayment;
+                    }
+
+                    return res;
+                }
+
                 computeTerminationDate(): Date {
-                    let numPayments: number;
+                    let numPayments: number = 0;
                     if (this.loanStatus == 'DEFAULTED') {
-                        const monthlyPayment = (this.amountBorrowed *
-                                                this.monthlyRate *
-                                                ((1 + this.monthlyRate) ** this.term)) /
-                                                (((1 + this.monthlyRate) ** this.term) - 1);
-                        numPayments = Math.ceil(this.principalPaid / monthlyPayment); 
+                        const monthlyPayment = this.computeMonthlyPayment(this.amountBorrowed);
+                        const fullAmortizationSchedule = this.computeAmortizationSchedule(this.amountBorrowed, monthlyPayment);
+                        const firstPaymentMonth = this.originationDate.getMonth() + 1;
+
+                        let firstPaymentDate: Date;
+                        if(firstPaymentMonth == 12){
+                            firstPaymentDate = new Date(this.originationDate.getFullYear() + 1, 0, 1);
+                        } else {
+                            firstPaymentDate = new Date(this.originationDate.getFullYear(), firstPaymentMonth, 1);
+                        }
+
+                        let paymentDate = firstPaymentDate;
+                        let paidSoFar = fullAmortizationSchedule[paymentDate.toDateString()][1];
+
+                        while (paidSoFar <= this.principalPaid) {
+                            numPayments += 1;
+
+                            const nextPaymentMonth = paymentDate.getMonth() + 1;
+
+                            if (nextPaymentMonth == 12) {
+                                paymentDate = new Date(paymentDate.getFullYear() + 1, 0, 1);
+                            } else {
+                                paymentDate = new Date(paymentDate.getFullYear(), nextPaymentMonth, 1);
+                            }
+                            paidSoFar += fullAmortizationSchedule[paymentDate.toDateString()][1];
+                        }
                     } else {
                         numPayments = this.term;
                     }
-
+                    
                     let terminationMonth = this.originationDate.getMonth() + numPayments;
                     const years = Math.floor(terminationMonth / 12);
                     terminationMonth %= 12;
 
-                    const terminationDate = new Date(this.originationDate);
-                    terminationDate.setMonth(terminationMonth)
-                    terminationDate.setFullYear(this.originationDate.getFullYear() + years);
+                    const terminationDate = new Date(this.originationDate.getFullYear() + years, terminationMonth, 1);
 
                     return terminationDate;
                 }
@@ -102,29 +140,10 @@ export class Loan extends P2P {
                 prosperRating: string) {
                     super(id, lenderYield, term, loanStatus, principalPaid, amountBorrowed,
                           originationDate, prosperRating);
-
-                          this.monthlyPayment = this.computeMonthlyPayment();
-                          this.amortizationSchedule = this.computeAmortizationSchedule();
+                          this.monthlyPayment = this.computeMonthlyPayment(25);
+                          this.amortizationSchedule = this.computeAmortizationSchedule(25,
+                                                                            this.monthlyPayment);
                           this.principalBalance = 25;
-                }
-
-                computeAmortizationSchedule(): { [key: string]: [number, number] }  {
-                    let currentDate = firstOfTheMonth(this.originationDate);
-
-                    let principalBalance = 25;
-                    const res: { [key: string]: [number, number] } = {};
-
-                    for (let i = 0; i < this.term; i++) {
-                        const interestPayment = (principalBalance * this.monthlyRate);
-                        const principalPayment = (this.monthlyPayment - interestPayment);
-
-                        currentDate = addMonth(currentDate);
-                        res[currentDate.toDateString()] = [interestPayment, principalPayment];
-
-                        principalBalance -= principalPayment;
-                    }
-
-                    return res;
                 }
 
                 isTerminated(currentDate: Date): boolean {
