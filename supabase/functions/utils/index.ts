@@ -119,14 +119,12 @@ abstract class P2P {
                     } else {
                         numPayments = this.term;
                     }
-
+                    
                     let terminationMonth = this.originationDate.getMonth() + numPayments;
                     const years = Math.floor(terminationMonth / 12);
                     terminationMonth %= 12;
 
-                    const terminationDate = new Date(this.originationDate);
-                    terminationDate.setMonth(terminationMonth)
-                    terminationDate.setFullYear(this.originationDate.getFullYear() + years);
+                    const terminationDate = new Date(this.originationDate.getFullYear() + years, terminationMonth, 1);
 
                     return terminationDate;
                 }
