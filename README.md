@@ -16,22 +16,22 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/luca-miniati/prosper-zero">
+  <a href="https://github.com/luca-miniati/cascade">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">ProsperZero</h3>
+<h3 align="center">Cascade</h3>
 
   <p align="center">
     Autonomous P2P Loan Optimization Agent
     <br />
-    <a href="https://github.com/luca-miniati/prosper-zero"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/luca-miniati/cascade"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     ·
-    <a href="https://github.com/luca-miniati/prosper-zero/issues">Report Bug</a>
+    <a href="https://github.com/luca-miniati/cascade/issues">Report Bug</a>
     ·
-    <a href="https://github.com/luca-miniati/prosper-zero/issues">Request Feature</a>
+    <a href="https://github.com/luca-miniati/cascade/issues">Request Feature</a>
   </p>
 </div>
 
@@ -85,12 +85,12 @@ machine learning to optimize a portfolio of loans, hands-free.
 ### Backtesting
 1. Install all dependencies
 2. Get [Prosper Data](https://help.prosper.com/hc/en-us/articles/210013083-Where-can-I-download-data-about-loans-through-Prosper)
-3. Navigate to `/prosper-zero/supabase/functions/backtest`
+3. Navigate to `/cascade/supabase/functions/backtest`
 4. Run `deno run --allow-all index.ts` to start backtesting script
 
 ### Frontend
 1. Install all dependencies
-2. Navigate to `/prosper-zero/prosper-zero`
+2. Navigate to `/cascade/cascade`
 3. Run `npm run dev`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -109,19 +109,19 @@ machine learning to optimize a portfolio of loans, hands-free.
     - [ ] Settings
     - [ ] History
 
-See the [open issues](https://github.com/luca-miniati/prosper-zero/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/luca-miniati/cascade/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/luca-miniati/prosper-zero.svg?style=for-the-badge
-[contributors-url]: https://github.com/luca-miniati/prosper-zero/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/luca-miniati/prosper-zero.svg?style=for-the-badge
-[forks-url]: https://github.com/luca-miniati/prosper-zero/network/members
-[stars-shield]: https://img.shields.io/github/stars/luca-miniati/prosper-zero.svg?style=for-the-badge
-[stars-url]: https://github.com/luca-miniati/prosper-zero/stargazers
-[issues-shield]: https://img.shields.io/github/issues/luca-miniati/prosper-zero.svg?style=for-the-badge
-[issues-url]: https://github.com/luca-miniati/prosper-zero/issues
+[contributors-shield]: https://img.shields.io/github/contributors/luca-miniati/cascade.svg?style=for-the-badge
+[contributors-url]: https://github.com/luca-miniati/cascade/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/luca-miniati/cascade.svg?style=for-the-badge
+[forks-url]: https://github.com/luca-miniati/cascade/network/members
+[stars-shield]: https://img.shields.io/github/stars/luca-miniati/cascade.svg?style=for-the-badge
+[stars-url]: https://github.com/luca-miniati/cascade/stargazers
+[issues-shield]: https://img.shields.io/github/issues/luca-miniati/cascade.svg?style=for-the-badge
+[issues-url]: https://github.com/luca-miniati/cascade/issues
 [Next-shield]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Deno-shield]: https://img.shields.io/badge/deno-000000?style=for-the-badge&logo=deno&logoColor=white
 [GLPK-shield]: https://img.shields.io/badge/GLPK-000000?style=for-the-badge&logo=gnu
