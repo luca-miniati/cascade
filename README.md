@@ -61,9 +61,8 @@
 
 ## About The Project
 
-What is ProsperZero?
-ProsperZero is an autonomous Peer-to-Peer (P2P) Loan Optimization Agent. It automates the process
-of purchasing loans on Prosper through its API. ProsperZero uses linear programming combined with
+Cascade is an autonomous Peer-to-Peer (P2P) Loan Optimization Agent. It automates the process
+of purchasing loans on Prosper through its API. Cascade uses linear programming combined with
 machine learning to optimize a portfolio of loans, hands-free.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
