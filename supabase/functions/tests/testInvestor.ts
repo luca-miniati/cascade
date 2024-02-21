@@ -5,7 +5,7 @@ import { ProsperZero } from "../model/index.ts";
 Deno.test("Test Investor.currentAllocation", () => {
     const investor1 = new Investor(
         [],
-        10000,
+        9999,
         new ProsperZero([]),
         1000,
     );
