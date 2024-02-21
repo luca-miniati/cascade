@@ -20,8 +20,6 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Cascade</h3>
-
   <p align="center">
     Autonomous P2P Loan Optimization Agent
     <br />
