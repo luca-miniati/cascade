@@ -7,7 +7,7 @@ import { ConfigProvider, theme } from 'antd';
 const font = Montserrat({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'ProsperZero',
+    title: 'Cascade',
     description: '',
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
             <ConfigProvider
                 theme={{
                     token: {
-                        colorPrimary: '#6366f1',
+                        colorPrimary: '#59afbc',
                         borderRadius: 4,
                         fontFamily: 'Montserrat',
                     },

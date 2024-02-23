@@ -1,16 +1,54 @@
+'use client';
+
 import React, { FC } from 'react';
-import Background from './components/background';
-import Navbar from './components/topNavbar';
-import Hero from './components/hero';
+import Link from 'next/link';
+// import { useRouter, useSearchParams } from 'next/navigation';
 
 const Home: FC = () => {
-    const backgroundImageUrl = '/gradients/02.png';
+    // const router = useRouter();
+    // const searchParams = useSearchParams();
+
+    const generateRandomState = () => {
+        const randomBytes = new Uint8Array(32);
+        crypto.getRandomValues(randomBytes);
+        const state = Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+        sessionStorage.setItem('state', state);
+        return state;
+    };
+
+    const logInWithProsper = async () => {
+        const state = generateRandomState(); 
+        const clientId = process.env.NEXT_PUBLIC_PROSPER_ID ?? '';
+        console.log(clientId);
+        const url = `https://www.prosper.com/oauth?client_id=${clientId}&response_type=auth_key&state=${state}`;
+        window.location.href = url;
+    }
+
     return (
-        <main className="h-screen text-white">
-            <Background url={backgroundImageUrl} flexDirection="column">
-                <Navbar navbarIndex={-1}/>
-                <Hero/>
-            </Background>
+        <main className="h-screen">
+            <div className="shadow-md">
+                <div className="w-2/3 m-auto flex flex-row justify-between items-center">
+                    <Link href={process.env.VERCEL_ENV ?? ''}>
+                        <p className="text-4xl p-4 text-cyan-600">cascade</p>
+                    </Link>
+                    <div className="flex">
+                        <Link className="m-4 bg-slate-200 hover:bg-slate-300 rounded" href="/howItWorks">
+                        <p className="py-2 px-3">How it Works</p>
+                        </Link>
+                        <Link className="m-4 bg-slate-200 hover:bg-slate-300 rounded" href="/contact">
+                            <p className="py-2 px-3">Contact</p>
+                        </Link>
+                        <Link className="m-4 bg-slate-200 hover:bg-slate-300 rounded"
+                        href="/signUp">
+                            <p className="py-2 px-3">Get Started</p>
+                        </Link>
+                        <button className="m-4 bg-cyan-600 hover:bg-cyan-500 rounded text-white"
+                        onClick={logInWithProsper}>
+                        <p className="py-2 px-3">Log In</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
    );
 };
