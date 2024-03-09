@@ -13,7 +13,7 @@ const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi
 // const url = 'https://api.prosper.com/listingsvc/v2/listings/?biddable=true&invested=false&investment_typeid=1'
 // const options = {
 //     headers: {
-//         'Authorization': 'bearer CfiFVX4DOp9wdpguuA9ZzfDNopA',
+//         'Authorization': 'bearer ',
 //         'Accept': 'application/json'
 //     }
 // }
