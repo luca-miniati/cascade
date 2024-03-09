@@ -1,90 +1,21 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient, User } from "https://esm.sh/@supabase/supabase-js@2";
+import { get_access_token, get_prosper_data, get_days_in_month } from "../utils/index.ts";
 
-async function get_access_token(user_data, supabase) {
-	if (Date.now() < user_data.expires_at.getTime() + 60000) {
-		return user_data.access_token;
-	} else {
-		const params = new URLSearchParams();
-		params.append('grant_type', 'authorization_key');
-		// params.append('client_id', Deno.env.get('PROSPER_CLIENT_ID'));
-		// params.append('client_secret', Deno.env.get('PROSPER_CLIENT_SECRET'));
-		params.append('client_id', Deno.env.get('PROSPER_CLIENT_ID') ?? '');
-		params.append('client_secret', Deno.env.get('PROSPER_CLIENT_SECRET') ?? '');
-		params.append('auth_key', user_data.auth_key);
-
-		const options = {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: params.toString()
-		};
-
-		try {
-			const data = await fetch('https://api.prosper.com/v1/security/oauth/token', options)
-				.then(res => {
-					if (!res.ok) {
-						throw new Error(res.statusText);
-					}
-					return res.json();
-				});
-
-			const expires_at = new Date(Date.now() + (data.expires_in * 1000));
-			const { error } = await supabase
-				.from('users')
-				.update({
-					access_token: data.access_token,
-					refresh_token: data.refresh_token,
-					expires_at: expires_at,
-				})
-				.eq('user_id', user_data.user_id);
-
-			if (error) {
-				throw new Error(error.message);
-			}
-
-			return data.access_token;
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
-	}
-}
-
-async function get_prosper_data(access_token: string) {
-	const res = await fetch(
-		"https://api.prosper.com/v1/accounts/prosper/?filters=AVAILABLE_CASH",
-		{
-			headers: {
-				"Authorization": "bearer " + access_token,
-				"Accept": "application/json",
-			}
-		}
-	);
-
-	if (!res.ok) {
-		throw new Error(res.statusText);
-	}
-
-	return res.json();
-}
-
-async function set_allocation_schedule(user, allocation_schedule, supabase) {
+async function set_allocation_schedule(user_id: string, allocation_schedule: number[], supabase: SupabaseClient) {
 	const { error } = await supabase
 		.from("users")
 		.update({ allocation_schedule: allocation_schedule })
-		.eq("user_id", user.id);
+		.eq("user_id", user_id);
 	
 	if (error) {
 		throw new Error(error.message);
 	}
 }
 
-async function update_allocation(user, days_in_month, supabase) {
+async function update_allocation(user: User, days_in_month: number, supabase: SupabaseClient) {
 	const { data, error } = await supabase
 		.from("users")
-		.select()
+		.select("*")
 		.eq("user_id", user.id);
 	if (error) {
 		return new Response("Oh fuck", { status: 500 });
@@ -112,21 +43,7 @@ async function update_allocation(user, days_in_month, supabase) {
 		allocation_schedule_index = allocation_schedule_index % days_in_month;
 	}
 
-	await set_allocation_schedule(user, allocation_schedule, supabase);
-}
-
-function get_days_in_month() {
-	const now = new Date();
-	// Init new date object with day 0
-	// This automatically gets set to last day in month, which is
-	// equal to the total number of days in this month
-	const days_in_month = new Date(
-		now.getFullYear(),
-		now.getMonth() + 1,
-		0
-	).getDate();
-
-	return days_in_month;
+	await set_allocation_schedule(user.id, allocation_schedule, supabase);
 }
 
 Deno.serve(async (_req: Request) => {
