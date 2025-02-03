@@ -56,7 +56,7 @@ class Backtest {
             }
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        await Deno.writeTextFile(this.outputPath, out.join("\n"));
+        // await Deno.writeTextFile(this.outputPath, out.join("\n"));
     }
 }
 
