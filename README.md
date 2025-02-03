@@ -22,14 +22,6 @@
 
   <p align="center">
     Autonomous P2P Loan Optimization Agent
-    <br />
-    <a href="https://github.com/luca-miniati/cascade"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    ·
-    <a href="https://github.com/luca-miniati/cascade/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/luca-miniati/cascade/issues">Request Feature</a>
   </p>
 </div>
 
@@ -93,20 +85,6 @@ machine learning to optimize a portfolio of loans, hands-free.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
-## Roadmap
-
-- [ ] Backtesting over historical data
-    - [ ] Analysis of performance
-        - [ ] 
-- [ ] Automatic orders
-- [ ] Frontend
-    - [ ] User management
-    - [ ] Dashboard
-    - [ ] Settings
-    - [ ] History
-
-See the [open issues](https://github.com/luca-miniati/cascade/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
